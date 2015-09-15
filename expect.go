@@ -51,6 +51,11 @@ func (F *Frisby) ExpectContent(content string) *Frisby {
 	return F
 }
 
+// ExpectJson uses the reflect.DeepEqual to compare the response
+// JSON and the supplied JSON for structural and value equality
+//
+// path can be a dot joined field names.
+// ex:  'path.to.subobject.field'
 func (F *Frisby) ExpectJson(path string, value interface{}) *Frisby {
 	simp_json, err := F.resp.Json()
 	if err != nil {
@@ -74,6 +79,11 @@ func (F *Frisby) ExpectJson(path string, value interface{}) *Frisby {
 	return F
 }
 
+// ExpectJsonType checks if the types of the response
+// JSON and the supplied JSON match
+//
+// path can be a dot joined field names.
+// ex:  'path.to.subobject.field'
 func (F *Frisby) ExpectJsonType(path string, val_type reflect.Kind) *Frisby {
 	json, err := F.resp.Json()
 	if err != nil {
@@ -97,8 +107,15 @@ func (F *Frisby) ExpectJsonType(path string, val_type reflect.Kind) *Frisby {
 	return F
 }
 
+// function type used in AfterContent()
 type AfterContentFunc func(F *Frisby, content []byte, err error)
 
+// AfterContent allows you to write your own functions for inspecting the body of the response.
+// You are also provided with the Frisby object.
+//
+// The function signiture is AfterContentFunc
+//  type AfterContentFunc func(F *Frisby, content []byte, err error)
+//
 func (F *Frisby) AfterContent(foo AfterContentFunc) *Frisby {
 	content, err := F.resp.Content()
 	foo(F, content, err)
@@ -107,6 +124,12 @@ func (F *Frisby) AfterContent(foo AfterContentFunc) *Frisby {
 
 type AfterTextFunc func(F *Frisby, text string, err error)
 
+// AfterText allows you to write your own functions for inspecting the body of the response.
+// You are also provided with the Frisby object.
+//
+// The function signiture is AfterTextFunc
+//  type AfterTextFunc func(F *Frisby, text string, err error)
+//
 func (F *Frisby) AfterText(foo AfterTextFunc) *Frisby {
 	text, err := F.resp.Text()
 	foo(F, text, err)
@@ -115,12 +138,20 @@ func (F *Frisby) AfterText(foo AfterTextFunc) *Frisby {
 
 type AfterJsonFunc func(F *Frisby, json *simplejson.Json, err error)
 
+// AfterJson allows you to write your own functions for inspecting the body of the response.
+// You are also provided with the Frisby object.
+//
+// The function signiture is AfterJsonFunc
+//  type AfterJsonFunc func(F *Frisby, json *simplejson.Json, err error)
+//
+// simplejson docs: https://github.com/bitly/go-simplejson
 func (F *Frisby) AfterJson(foo AfterJsonFunc) *Frisby {
 	json, err := F.resp.Json()
 	foo(F, json, err)
 	return F
 }
 
+// Prints the body of the response
 func (F *Frisby) PrintBody() *Frisby {
 	str, err := F.resp.Text()
 	if err != nil {
@@ -132,6 +163,8 @@ func (F *Frisby) PrintBody() *Frisby {
 }
 
 // Prints a report for the Frisby Object
+//
+// If there are any errors, they will all be printed as well
 func (F *Frisby) PrintReport() *Frisby {
 	if len(F.errs) == 0 {
 		fmt.Printf("Pass  [%s]\n", F.Name)

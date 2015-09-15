@@ -17,7 +17,7 @@ func main() {
 		ExpectContent("The Go Programming Language").
 		PrintReport()
 
-	frisby.Create("Test GET Go homepage").
+	frisby.Create("Test GET Go homepage (which fails)").
 		Get("http://golang.org").
 		Send().
 		ExpectStatus(400).
@@ -43,6 +43,7 @@ func main() {
 		Send().
 		ExpectStatus(200).
 		ExpectJson("url", "http://httpbin.org/post").
+		ExpectJson("headers.Accept", "*/*").
 		PrintReport()
 
 }
