@@ -1,6 +1,7 @@
 package frisby
 
 import (
+	"errors"
 	"net/http"
 	"os"
 
@@ -24,6 +25,7 @@ func Create(name string) *Frisby {
 	F := new(Frisby)
 	F.Name = name
 	F.req = request.NewRequest(new(http.Client))
+	F.errs = make([]error, 0)
 
 	return F
 }
@@ -189,6 +191,13 @@ func (F *Frisby) Send() *Frisby {
 	if err != nil {
 		F.errs = append(F.errs, err)
 	}
+	return F
+}
+
+// Manually add an error, if you need to
+func (F *Frisby) AddError(err_str string) *Frisby {
+	err := errors.New(err_str)
+	F.errs = append(F.errs, err)
 	return F
 }
 

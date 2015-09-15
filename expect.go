@@ -69,9 +69,28 @@ func (F *Frisby) ExpectJson(path string, value interface{}) *Frisby {
 	}
 	json := simp_json.Interface()
 
-	equal := reflect.DeepEqual(value, json)
+	equal := false
+	switch reflect.ValueOf(value).Kind() {
+	case reflect.Int:
+		val, err := simp_json.Int()
+		if err != nil {
+			F.errs = append(F.errs, err)
+		} else {
+			equal = (val == value.(int))
+		}
+	case reflect.Float64:
+		val, err := simp_json.Float64()
+		if err != nil {
+			F.errs = append(F.errs, err)
+		} else {
+			equal = (val == value.(float64))
+		}
+	default:
+		equal = reflect.DeepEqual(value, json)
+	}
+
 	if !equal {
-		err_str := fmt.Sprintf("ExpectJson equality test failed")
+		err_str := fmt.Sprintf("ExpectJson equality test failed for %q, got type: %v", path, reflect.TypeOf(json))
 		err := errors.New(err_str)
 		F.errs = append(F.errs, err)
 	}

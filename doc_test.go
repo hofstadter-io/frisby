@@ -36,11 +36,13 @@ func ExampleFrisby_PrintReport() {
 		Send().
 		ExpectStatus(400).
 		ExpectContent("A string which won't be found").
+		AddError("Manually Added Error").
 		PrintReport()
 
 	// Output: FAIL  [Test GET Go homepage]
 	//         -  Expected Status 400, but got 200: "200 OK"
 	//         -  Expected Body to contain "A string which won't be found", but it was missing
+	//         -  Manually Added Error
 }
 
 func ExampleFrisby_ExpectJsonType() {
