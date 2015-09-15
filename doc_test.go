@@ -1,4 +1,4 @@
-package frisby
+package frisby_test
 
 import (
 	"fmt"
@@ -46,4 +46,26 @@ func ExamplePrintReport_Fail() {
 	// FAIL  [Test GET Go homepage]
 	//         -  Expected Status 400, but got 200: "200 OK"
 	//         -  Expected Body to contain "A string which won't be found", but it was missing
+}
+
+func ExampleExpectJsonType() {
+	frisby.Create("Test ExpectJsonType").
+		Post("http://httpbin.org/post").
+		Send().
+		ExpectStatus(200).
+		ExpectJsonType("url", reflect.String).
+		PrintReport()
+
+	// Pass  [Test ExpectJsonType]
+}
+
+func ExampleExpectJson() {
+	frisby.Create("Test ExpectJson").
+		Post("http://httpbin.org/post").
+		Send().
+		ExpectStatus(200).
+		ExpectJson("url", "http://httpbin.org/post").
+		PrintReport()
+
+	// Pass  [Test ExpectJson]
 }

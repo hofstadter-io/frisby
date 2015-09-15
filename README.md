@@ -11,7 +11,7 @@ go get -U github.com/verdverm/frisby
 
 ### Basic Usage
 
-First create a frisby object:
+First create a Frisby object:
 
 ```
 // create an object with a given name (used in the report)
@@ -35,13 +35,14 @@ F.ExpectStatus(200).
 
 Check any error(s):
 
-```
-err := F.Error()
+`err := F.Error()`
 
+```
 errs := F.Errors()
 for _,e := range errs {
 	fmt.Println("Error: ", e)
 }
+```
 
 ### HTTP Method functions
 

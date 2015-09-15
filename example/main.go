@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"reflect"
 
 	"github.com/verdverm/frisby"
 )
@@ -28,7 +29,20 @@ func main() {
 		SetData("test_key", "test_value").
 		Send().
 		ExpectStatus(200).
-		// PrintBody().
+		PrintReport()
+
+	frisby.Create("Test ExpectJsonType").
+		Post("http://httpbin.org/post").
+		Send().
+		ExpectStatus(200).
+		ExpectJsonType("url", reflect.String).
+		PrintReport()
+
+	frisby.Create("Test ExpectJson").
+		Post("http://httpbin.org/post").
+		Send().
+		ExpectStatus(200).
+		ExpectJson("url", "http://httpbin.org/post").
 		PrintReport()
 
 }
