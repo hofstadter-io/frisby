@@ -107,7 +107,7 @@ func (F *Frisby) ExpectJsonType(path string, val_type reflect.Kind) *Frisby {
 	return F
 }
 
-// function type used in AfterContent()
+// function type used as argument to AfterContent()
 type AfterContentFunc func(F *Frisby, content []byte, err error)
 
 // AfterContent allows you to write your own functions for inspecting the body of the response.
@@ -122,6 +122,7 @@ func (F *Frisby) AfterContent(foo AfterContentFunc) *Frisby {
 	return F
 }
 
+// function type used as argument to AfterText()
 type AfterTextFunc func(F *Frisby, text string, err error)
 
 // AfterText allows you to write your own functions for inspecting the body of the response.
@@ -136,6 +137,7 @@ func (F *Frisby) AfterText(foo AfterTextFunc) *Frisby {
 	return F
 }
 
+// function type used as argument to AfterJson()
 type AfterJsonFunc func(F *Frisby, json *simplejson.Json, err error)
 
 // AfterJson allows you to write your own functions for inspecting the body of the response.

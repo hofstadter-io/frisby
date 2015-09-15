@@ -2,6 +2,10 @@ package frisby_test
 
 import (
 	"fmt"
+	"reflect"
+
+	"github.com/bitly/go-simplejson"
+	"github.com/verdverm/frisby"
 )
 
 func ExampleFrisby_Get() {
@@ -11,6 +15,8 @@ func ExampleFrisby_Get() {
 		ExpectStatus(200).
 		ExpectContent("The Go Programming Language").
 		PrintReport()
+
+	// Output: Pass  [Test GET Go homepage]
 }
 
 func ExampleFrisby_Post() {
@@ -21,7 +27,7 @@ func ExampleFrisby_Post() {
 		ExpectStatus(200).
 		PrintReport()
 
-	// Pass  [Test POST]
+	// Output: Pass  [Test POST]
 }
 
 func ExampleFrisby_PrintReport_Pass() {
@@ -32,7 +38,7 @@ func ExampleFrisby_PrintReport_Pass() {
 		ExpectContent("The Go Programming Language").
 		PrintReport()
 
-	// Pass  [Test GET Go homepage]
+	// Output: Pass  [Test GET Go homepage]
 }
 
 func ExampleFrisby_PrintReport_Fail() {
@@ -43,7 +49,7 @@ func ExampleFrisby_PrintReport_Fail() {
 		ExpectContent("A string which won't be found").
 		PrintReport()
 
-	// FAIL  [Test GET Go homepage]
+	// Output: FAIL  [Test GET Go homepage]
 	//         -  Expected Status 400, but got 200: "200 OK"
 	//         -  Expected Body to contain "A string which won't be found", but it was missing
 }
@@ -56,7 +62,7 @@ func ExampleFrisby_ExpectJsonType() {
 		ExpectJsonType("url", reflect.String).
 		PrintReport()
 
-	// Pass  [Test ExpectJsonType]
+	// Output: Pass  [Test ExpectJsonType]
 }
 
 func ExampleFrisby_ExpectJson() {
@@ -65,7 +71,21 @@ func ExampleFrisby_ExpectJson() {
 		Send().
 		ExpectStatus(200).
 		ExpectJson("url", "http://httpbin.org/post").
+		ExpectJson("headers.Accept", "*/*").
 		PrintReport()
 
-	// Pass  [Test ExpectJson]
+	// Output: Pass  [Test ExpectJson]
+}
+
+func ExampleFrisby_AfterJson() {
+	frisby.Create("Test AfterJson").
+		Post("http://httpbin.org/post").
+		Send().
+		ExpectStatus(200).
+		AfterJson(func(F *frisby.Frisby, json *simplejson.Json, err error) {
+		val, _ := json.Get("url").String()
+		fmt.Println("url =", val)
+	})
+
+	// Output: url = http://httpbin.org/post
 }
