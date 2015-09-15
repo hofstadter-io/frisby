@@ -4,7 +4,7 @@ import (
 	"fmt"
 )
 
-func ExampleGet() {
+func ExampleFrisby_Get() {
 	frisby.Create("Test GET Go homepage").
 		Get("http://golang.org").
 		Send().
@@ -13,7 +13,7 @@ func ExampleGet() {
 		PrintReport()
 }
 
-func ExamplePost() {
+func ExampleFrisby_Post() {
 	frisby.Create("Test POST").
 		Post("http://httpbin.org/post").
 		SetData("test_key", "test_value").
@@ -24,7 +24,7 @@ func ExamplePost() {
 	// Pass  [Test POST]
 }
 
-func ExamplePrintReport_Pass() {
+func ExampleFrisby_PrintReport_Pass() {
 	frisby.Create("Test GET Go homepage").
 		Get("http://golang.org").
 		Send().
@@ -35,7 +35,7 @@ func ExamplePrintReport_Pass() {
 	// Pass  [Test GET Go homepage]
 }
 
-func ExamplePrintReport_Fail() {
+func ExampleFrisby_PrintReport_Fail() {
 	frisby.Create("Test GET Go homepage").
 		Get("http://golang.org").
 		Send().
@@ -48,7 +48,7 @@ func ExamplePrintReport_Fail() {
 	//         -  Expected Body to contain "A string which won't be found", but it was missing
 }
 
-func ExampleExpectJsonType() {
+func ExampleFrisby_ExpectJsonType() {
 	frisby.Create("Test ExpectJsonType").
 		Post("http://httpbin.org/post").
 		Send().
@@ -59,7 +59,7 @@ func ExampleExpectJsonType() {
 	// Pass  [Test ExpectJsonType]
 }
 
-func ExampleExpectJson() {
+func ExampleFrisby_ExpectJson() {
 	frisby.Create("Test ExpectJson").
 		Post("http://httpbin.org/post").
 		Send().
