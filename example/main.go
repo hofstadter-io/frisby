@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"reflect"
 
 	"github.com/verdverm/frisby"
 )
@@ -10,41 +9,26 @@ import (
 func main() {
 	fmt.Println("Frisby!\n")
 
-	creds := map[string]string{
-		"username": "test",
-		"password": "test",
-	}
-	frisby.Create("Test successful user login").
-		Post("http://localhost:8080/auth/login").
-		SetJson(creds).
+	frisby.Create("Test GET Go homepage").
+		Get("http://golang.org").
 		Send().
 		ExpectStatus(200).
-		ExpectJsonType("uid", reflect.String).
-		ExpectJson("uid", "4fa54e0-1edb-4051-a175-0076603cde7").
+		ExpectContent("The Go Programming Language").
 		PrintReport()
 
-	bad_username := map[string]string{
-		"username": "test2",
-		"password": "test",
-	}
-	frisby.Create("Test bad username login").
-		Post("http://localhost:8080/auth/login").
-		SetJson(bad_username).
+	frisby.Create("Test GET Go homepage").
+		Get("http://golang.org").
 		Send().
 		ExpectStatus(400).
-		ExpectJson("Error", "login failure").
+		ExpectContent("A string which won't be found").
 		PrintReport()
 
-	bad_password := map[string]string{
-		"username": "test",
-		"password": "test2",
-	}
-	frisby.Create("Test bad password login").
-		Post("http://localhost:8080/auth/login").
-		SetJson(bad_password).
+	frisby.Create("Test POST").
+		Post("http://httpbin.org/post").
+		SetData("test_key", "test_value").
 		Send().
-		ExpectStatus(400).
-		ExpectJson("Error", "login failure").
+		ExpectStatus(200).
+		// PrintBody().
 		PrintReport()
 
 }

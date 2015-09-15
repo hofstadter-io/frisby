@@ -9,6 +9,7 @@ import (
 	"github.com/bitly/go-simplejson"
 )
 
+// Checks the response status code
 func (F *Frisby) ExpectStatus(code int) *Frisby {
 	status := F.resp.StatusCode
 	if status != code {
@@ -19,6 +20,7 @@ func (F *Frisby) ExpectStatus(code int) *Frisby {
 	return F
 }
 
+// Checks for header and if values match
 func (F *Frisby) ExpectHeader(key, value string) *Frisby {
 	chk_val := F.resp.Header.Get(key)
 	if chk_val == "" {
@@ -33,6 +35,7 @@ func (F *Frisby) ExpectHeader(key, value string) *Frisby {
 	return F
 }
 
+// Checks the response body for the given string
 func (F *Frisby) ExpectContent(content string) *Frisby {
 	text, err := F.resp.Text()
 	if err != nil {
@@ -128,6 +131,7 @@ func (F *Frisby) PrintBody() *Frisby {
 	return F
 }
 
+// Prints a report for the Frisby Object
 func (F *Frisby) PrintReport() *Frisby {
 	if len(F.errs) == 0 {
 		fmt.Printf("Pass  [%s]\n", F.Name)
