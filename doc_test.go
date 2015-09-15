@@ -30,18 +30,7 @@ func ExampleFrisby_Post() {
 	// Output: Pass  [Test POST]
 }
 
-func ExampleFrisby_PrintReport_Pass() {
-	frisby.Create("Test GET Go homepage").
-		Get("http://golang.org").
-		Send().
-		ExpectStatus(200).
-		ExpectContent("The Go Programming Language").
-		PrintReport()
-
-	// Output: Pass  [Test GET Go homepage]
-}
-
-func ExampleFrisby_PrintReport_Fail() {
+func ExampleFrisby_PrintReport() {
 	frisby.Create("Test GET Go homepage").
 		Get("http://golang.org").
 		Send().

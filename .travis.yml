@@ -1,0 +1,13 @@
+language: go
+
+notifications:
+  email: false
+
+branches:
+  only:
+    - master
+    - develop
+
+install:
+  - go get -u github.com/bitly/go-simplejson
+  - go get -u github.com/mozillazg/request

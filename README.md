@@ -6,7 +6,7 @@ API testing framework inspired by frisby-js, written in Go
 ### Installation
 
 ```
-go get -U github.com/verdverm/frisby
+go get -u github.com/verdverm/frisby
 ```
 
 ### Basic Usage
