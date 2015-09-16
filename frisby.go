@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/mozillazg/request"
+	"github.com/verdverm/frisby"
 )
 
 type Frisby struct {
@@ -13,9 +14,9 @@ type Frisby struct {
 	Url    string
 	Method string
 
-	req  *request.Request
-	resp *request.Response
-	errs []error
+	Req  *request.Request
+	Resp *request.Response
+	Errs []error
 }
 
 // Creates a new Frisby object with the given name.
@@ -24,8 +25,8 @@ type Frisby struct {
 func Create(name string) *Frisby {
 	F := new(Frisby)
 	F.Name = name
-	F.req = request.NewRequest(new(http.Client))
-	F.errs = make([]error, 0)
+	F.Req = request.NewRequest(new(http.Client))
+	F.Errs = make([]error, 0)
 
 	return F
 }
@@ -81,78 +82,78 @@ func (F *Frisby) Options(url string) *Frisby {
 
 // Set BasicAuth values for the coming request
 func (F *Frisby) BasicAuth(user, passwd string) *Frisby {
-	F.req.BasicAuth = request.BasicAuth{user, passwd}
+	F.Req.BasicAuth = request.BasicAuth{user, passwd}
 	return F
 }
 
 // Set Proxy URL for the coming request
 func (F *Frisby) Proxy(url string) *Frisby {
-	F.req.Proxy = url
+	F.Req.Proxy = url
 	return F
 }
 
 // Set a Header value for the coming request
 func (F *Frisby) SetHeader(key, value string) *Frisby {
-	F.req.Headers[key] = value
+	F.Req.Headers[key] = value
 	return F
 }
 
 // Set several Headers for the coming request
 func (F *Frisby) SetHeaders(headers map[string]string) *Frisby {
 	for key, value := range headers {
-		F.req.Headers[key] = value
+		F.Req.Headers[key] = value
 	}
 	return F
 }
 
 // Set a Cookie value for the coming request
 func (F *Frisby) SetCookie(key, value string) *Frisby {
-	F.req.Cookies[key] = value
+	F.Req.Cookies[key] = value
 	return F
 }
 
 // Set several Cookie values for the coming request
 func (F *Frisby) SetCookies(cookies map[string]string) *Frisby {
 	for key, value := range cookies {
-		F.req.Cookies[key] = value
+		F.Req.Cookies[key] = value
 	}
 	return F
 }
 
 // Set a Form data for the coming request
 func (F *Frisby) SetData(key, value string) *Frisby {
-	if F.req.Data == nil {
-		F.req.Data = make(map[string]string)
+	if F.Req.Data == nil {
+		F.Req.Data = make(map[string]string)
 	}
-	F.req.Data[key] = value
+	F.Req.Data[key] = value
 	return F
 }
 
 // Set several Form data for the coming request
 func (F *Frisby) SetDatas(datas map[string]string) *Frisby {
 	for key, value := range datas {
-		F.req.Data[key] = value
+		F.Req.Data[key] = value
 	}
 	return F
 }
 
 // Set a url Param for the coming request
 func (F *Frisby) SetParam(key, value string) *Frisby {
-	F.req.Params[key] = value
+	F.Req.Params[key] = value
 	return F
 }
 
 // Set several url Param for the coming request
 func (F *Frisby) SetParams(params map[string]string) *Frisby {
 	for key, value := range params {
-		F.req.Params[key] = value
+		F.Req.Params[key] = value
 	}
 	return F
 }
 
 // Set the JSON body for the coming request
 func (F *Frisby) SetJson(json interface{}) *Frisby {
-	F.req.Json = json
+	F.Req.Json = json
 	return F
 }
 
@@ -160,10 +161,10 @@ func (F *Frisby) SetJson(json interface{}) *Frisby {
 func (F *Frisby) AddFile(filename string) *Frisby {
 	file, err := os.Open("test.txt")
 	if err != nil {
-		F.errs = append(F.errs, err)
+		F.Errs = append(F.Errs, err)
 	} else {
 		fileField := request.FileField{"file", "test.txt", file}
-		F.req.Files = append(F.req.Files, fileField)
+		F.Req.Files = append(F.Req.Files, fileField)
 	}
 	return F
 }
@@ -173,23 +174,23 @@ func (F *Frisby) Send() *Frisby {
 	var err error
 	switch F.Method {
 	case "GET":
-		F.resp, err = F.req.Get(F.Url)
+		F.Resp, err = F.Req.Get(F.Url)
 	case "POST":
-		F.resp, err = F.req.Post(F.Url)
+		F.Resp, err = F.Req.Post(F.Url)
 	case "PUT":
-		F.resp, err = F.req.Put(F.Url)
+		F.Resp, err = F.Req.Put(F.Url)
 	case "PATCH":
-		F.resp, err = F.req.Patch(F.Url)
+		F.Resp, err = F.Req.Patch(F.Url)
 	case "DELETE":
-		F.resp, err = F.req.Delete(F.Url)
+		F.Resp, err = F.Req.Delete(F.Url)
 	case "HEAD":
-		F.resp, err = F.req.Head(F.Url)
+		F.Resp, err = F.Req.Head(F.Url)
 	case "OPTIONS":
-		F.resp, err = F.req.Options(F.Url)
+		F.Resp, err = F.Req.Options(F.Url)
 	}
 
 	if err != nil {
-		F.errs = append(F.errs, err)
+		F.Errs = append(F.Errs, err)
 	}
 	return F
 }
@@ -197,7 +198,7 @@ func (F *Frisby) Send() *Frisby {
 // Manually add an error, if you need to
 func (F *Frisby) AddError(err_str string) *Frisby {
 	err := errors.New(err_str)
-	F.errs = append(F.errs, err)
+	F.Errs = append(F.Errs, err)
 	return F
 }
 
@@ -205,12 +206,12 @@ func (F *Frisby) AddError(err_str string) *Frisby {
 //
 // This function should be called last
 func (F *Frisby) Error() error {
-	return F.errs[len(F.errs)-1]
+	return F.Errs[len(F.Errs)-1]
 }
 
 // Get all errors for the Frisby object
 //
 // This function should be called last
 func (F *Frisby) Errors() []error {
-	return F.errs
+	return F.Errs
 }

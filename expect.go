@@ -11,42 +11,42 @@ import (
 
 // Checks the response status code
 func (F *Frisby) ExpectStatus(code int) *Frisby {
-	status := F.resp.StatusCode
+	status := F.Resp.StatusCode
 	if status != code {
-		err_str := fmt.Sprintf("Expected Status %d, but got %d: %q", code, status, F.resp.Status)
+		err_str := fmt.Sprintf("Expected Status %d, but got %d: %q", code, status, F.Resp.Status)
 		err := errors.New(err_str)
-		F.errs = append(F.errs, err)
+		F.Errs = append(F.Errs, err)
 	}
 	return F
 }
 
 // Checks for header and if values match
 func (F *Frisby) ExpectHeader(key, value string) *Frisby {
-	chk_val := F.resp.Header.Get(key)
+	chk_val := F.Resp.Header.Get(key)
 	if chk_val == "" {
 		err_str := fmt.Sprintf("Expected Header %q, but it was missing", key)
 		err := errors.New(err_str)
-		F.errs = append(F.errs, err)
+		F.Errs = append(F.Errs, err)
 	} else if chk_val != value {
 		err_str := fmt.Sprintf("Expected Header %q to be %q, but got %q", key, value, chk_val)
 		err := errors.New(err_str)
-		F.errs = append(F.errs, err)
+		F.Errs = append(F.Errs, err)
 	}
 	return F
 }
 
 // Checks the response body for the given string
 func (F *Frisby) ExpectContent(content string) *Frisby {
-	text, err := F.resp.Text()
+	text, err := F.Resp.Text()
 	if err != nil {
-		F.errs = append(F.errs, err)
+		F.Errs = append(F.Errs, err)
 		return F
 	}
 	contains := strings.Contains(text, content)
 	if !contains {
 		err_str := fmt.Sprintf("Expected Body to contain %q, but it was missing", content)
 		err := errors.New(err_str)
-		F.errs = append(F.errs, err)
+		F.Errs = append(F.Errs, err)
 	}
 	return F
 }
@@ -57,9 +57,9 @@ func (F *Frisby) ExpectContent(content string) *Frisby {
 // path can be a dot joined field names.
 // ex:  'path.to.subobject.field'
 func (F *Frisby) ExpectJson(path string, value interface{}) *Frisby {
-	simp_json, err := F.resp.Json()
+	simp_json, err := F.Resp.Json()
 	if err != nil {
-		F.errs = append(F.errs, err)
+		F.Errs = append(F.Errs, err)
 		return F
 	}
 
@@ -74,14 +74,14 @@ func (F *Frisby) ExpectJson(path string, value interface{}) *Frisby {
 	case reflect.Int:
 		val, err := simp_json.Int()
 		if err != nil {
-			F.errs = append(F.errs, err)
+			F.Errs = append(F.Errs, err)
 		} else {
 			equal = (val == value.(int))
 		}
 	case reflect.Float64:
 		val, err := simp_json.Float64()
 		if err != nil {
-			F.errs = append(F.errs, err)
+			F.Errs = append(F.Errs, err)
 		} else {
 			equal = (val == value.(float64))
 		}
@@ -92,7 +92,7 @@ func (F *Frisby) ExpectJson(path string, value interface{}) *Frisby {
 	if !equal {
 		err_str := fmt.Sprintf("ExpectJson equality test failed for %q, got type: %v", path, reflect.TypeOf(json))
 		err := errors.New(err_str)
-		F.errs = append(F.errs, err)
+		F.Errs = append(F.Errs, err)
 	}
 
 	return F
@@ -104,9 +104,9 @@ func (F *Frisby) ExpectJson(path string, value interface{}) *Frisby {
 // path can be a dot joined field names.
 // ex:  'path.to.subobject.field'
 func (F *Frisby) ExpectJsonType(path string, val_type reflect.Kind) *Frisby {
-	json, err := F.resp.Json()
+	json, err := F.Resp.Json()
 	if err != nil {
-		F.errs = append(F.errs, err)
+		F.Errs = append(F.Errs, err)
 	}
 
 	if path != "" {
@@ -120,7 +120,7 @@ func (F *Frisby) ExpectJsonType(path string, val_type reflect.Kind) *Frisby {
 	if val_type != json_val.Kind() {
 		err_str := fmt.Sprintf("Expect Json %q type to be %q, but got %q", path, val_type, json_val.Type())
 		err := errors.New(err_str)
-		F.errs = append(F.errs, err)
+		F.Errs = append(F.Errs, err)
 	}
 
 	return F
@@ -136,7 +136,7 @@ type AfterContentFunc func(F *Frisby, content []byte, err error)
 //  type AfterContentFunc func(F *Frisby, content []byte, err error)
 //
 func (F *Frisby) AfterContent(foo AfterContentFunc) *Frisby {
-	content, err := F.resp.Content()
+	content, err := F.Resp.Content()
 	foo(F, content, err)
 	return F
 }
@@ -151,7 +151,7 @@ type AfterTextFunc func(F *Frisby, text string, err error)
 //  type AfterTextFunc func(F *Frisby, text string, err error)
 //
 func (F *Frisby) AfterText(foo AfterTextFunc) *Frisby {
-	text, err := F.resp.Text()
+	text, err := F.Resp.Text()
 	foo(F, text, err)
 	return F
 }
@@ -167,16 +167,16 @@ type AfterJsonFunc func(F *Frisby, json *simplejson.Json, err error)
 //
 // simplejson docs: https://github.com/bitly/go-simplejson
 func (F *Frisby) AfterJson(foo AfterJsonFunc) *Frisby {
-	json, err := F.resp.Json()
+	json, err := F.Resp.Json()
 	foo(F, json, err)
 	return F
 }
 
 // Prints the body of the response
 func (F *Frisby) PrintBody() *Frisby {
-	str, err := F.resp.Text()
+	str, err := F.Resp.Text()
 	if err != nil {
-		F.errs = append(F.errs, err)
+		F.Errs = append(F.Errs, err)
 		fmt.Println("Error: ", err)
 	}
 	fmt.Println(str)
@@ -187,11 +187,11 @@ func (F *Frisby) PrintBody() *Frisby {
 //
 // If there are any errors, they will all be printed as well
 func (F *Frisby) PrintReport() *Frisby {
-	if len(F.errs) == 0 {
+	if len(F.Errs) == 0 {
 		fmt.Printf("Pass  [%s]\n", F.Name)
 	} else {
 		fmt.Printf("FAIL  [%s]\n", F.Name)
-		for _, e := range F.errs {
+		for _, e := range F.Errs {
 			fmt.Println("        - ", e)
 		}
 	}
