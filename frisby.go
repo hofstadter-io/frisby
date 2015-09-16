@@ -6,7 +6,6 @@ import (
 	"os"
 
 	"github.com/mozillazg/request"
-	"github.com/verdverm/frisby"
 )
 
 type Frisby struct {
