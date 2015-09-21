@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/verdverm/frisby.svg?branch=master)](https://travis-ci.org/verdverm/frisby)
 [![GoDoc](https://godoc.org/github.com/verdverm/frisby?status.svg)](https://godoc.org/github.com/verdverm/frisby)
+[![Release](https://img.shields.io/github/release/qubyte/rubidium.svg)](https://github.com/verdverm/frisby/releases/tag/1.0)
 
 REST API testing framework inspired by frisby-js, written in Go
 
@@ -21,21 +22,47 @@ F := frisby.Create("Test successful user login").
     Get("https://golang.org")
 ```
 
-Next perform the operation:
+Add any pre-flight data
+
+```
+F.SetHeader("Content-Type": "application/json").
+	SetHeader("Accept", "application/json, text/plain, */*").
+	SetJson([]string{"item1", "item2", "item3"})
+```
+
+There is also a Global object for setting repeated Pre-flight options.
+
+```
+frisby.Global.BasicAuth("username", "password").
+	SetHeader("Authorization", "Bearer " + TOKEN)
+```
+
+Next send the request:
 
 ```
 F.Send()
 ```
 
-Then inspect the response:
+Then assert and inspect the response:
 
 ```
 F.ExpectStatus(200).
-    ExpectContent("The Go Programming Language").
-    PrintReport()
+    ExpectJson("nested.path.tovalue", "sometext").
+    ExpectJson("nested.path2.tonum", 23).
+    ExpectJsonLength("data", 3).
+    AfterJson(func(F *frisby.Frisby, json *simplejson.Json, err error) {
+		val, _ := json.Get("proxy").String()
+		frisby.Global.SetProxy(val)
+	})
 ```
 
-Check any error(s):
+Finally, print out a report of the tests
+
+```
+frisby.Global.PrintReport()
+```
+
+Check any error(s), however the global report prints any that occured as well
 
 `err := F.Error()`
 
@@ -46,11 +73,6 @@ for _,e := range errs {
 }
 ```
 
-There is also a Global object for setting repeated Pre-flight options.
-
-```
-frisby.Global.BasicAuth("username", "password")
-```
 
 ### HTTP Method functions
 
@@ -104,6 +126,8 @@ Functions called after `Send()`
 
 
 ### More examples
+
+You can find a longer example [here](https://github.com/verdverm/pomopomo/tree/master/test/api)
 
 ```
 package main

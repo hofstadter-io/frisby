@@ -8,6 +8,10 @@ import (
 	"github.com/verdverm/frisby"
 )
 
+func init() {
+	frisby.Global.PrintProgressDot = false
+}
+
 func ExampleFrisby_Get() {
 	frisby.Create("Test GET Go homepage").
 		Get("http://golang.org").
