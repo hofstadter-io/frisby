@@ -2,11 +2,14 @@ package frisby
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 	"os"
 
 	"github.com/mozillazg/request"
 )
+
+var Global global_data
 
 type Frisby struct {
 	Name   string
@@ -26,6 +29,16 @@ func Create(name string) *Frisby {
 	F.Name = name
 	F.Req = request.NewRequest(new(http.Client))
 	F.Errs = make([]error, 0)
+
+	// copy in global settings
+	F.Req.BasicAuth = Global.Req.BasicAuth
+	F.Req.Proxy = Global.Req.Proxy
+	F.SetHeaders(Global.Req.Headers)
+	F.SetCookies(Global.Req.Cookies)
+	F.SetDatas(Global.Req.Data)
+	F.SetParams(Global.Req.Params)
+	F.Req.Json = Global.Req.Json
+	F.Req.Files = append(F.Req.Files, Global.Req.Files...)
 
 	return F
 }
@@ -86,7 +99,7 @@ func (F *Frisby) BasicAuth(user, passwd string) *Frisby {
 }
 
 // Set Proxy URL for the coming request
-func (F *Frisby) Proxy(url string) *Frisby {
+func (F *Frisby) SetProxy(url string) *Frisby {
 	F.Req.Proxy = url
 	return F
 }
@@ -158,11 +171,11 @@ func (F *Frisby) SetJson(json interface{}) *Frisby {
 
 // Add a file to the Form data for the coming request
 func (F *Frisby) AddFile(filename string) *Frisby {
-	file, err := os.Open("test.txt")
+	file, err := os.Open(filename)
 	if err != nil {
 		F.Errs = append(F.Errs, err)
 	} else {
-		fileField := request.FileField{"file", "test.txt", file}
+		fileField := request.FileField{"file", filename, file}
 		F.Req.Files = append(F.Req.Files, fileField)
 	}
 	return F
@@ -170,6 +183,13 @@ func (F *Frisby) AddFile(filename string) *Frisby {
 
 // Send the actual request to the URL
 func (F *Frisby) Send() *Frisby {
+	Global.NumRequest++
+	if Global.PrintProgressName {
+		fmt.Println(F.Name)
+	} else if Global.PrintProgressDot {
+		fmt.Printf(".")
+	}
+
 	var err error
 	switch F.Method {
 	case "GET":
@@ -191,6 +211,7 @@ func (F *Frisby) Send() *Frisby {
 	if err != nil {
 		F.Errs = append(F.Errs, err)
 	}
+
 	return F
 }
 
@@ -198,6 +219,7 @@ func (F *Frisby) Send() *Frisby {
 func (F *Frisby) AddError(err_str string) *Frisby {
 	err := errors.New(err_str)
 	F.Errs = append(F.Errs, err)
+	Global.AddError(F.Name, err_str)
 	return F
 }
 
