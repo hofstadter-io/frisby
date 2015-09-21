@@ -127,6 +127,39 @@ func (F *Frisby) ExpectJsonType(path string, val_type reflect.Kind) *Frisby {
 	return F
 }
 
+// ExpectJsonLength checks if the JSON at path
+// is an array and has the correct length
+//
+// path can be a dot joined field names.
+// ex:  'path.to.subobject.field'
+func (F *Frisby) ExpectJsonLength(path string, length int) *Frisby {
+	Global.NumAsserts++
+	json, err := F.Resp.Json()
+	if err != nil {
+		F.AddError(err.Error())
+		return F
+	}
+
+	if path != "" {
+		path_items := strings.Split(path, ".")
+		json = json.GetPath(path_items...)
+	}
+
+	ary, err := json.Array()
+	if err != nil {
+		F.AddError(err.Error())
+		return F
+	}
+	L := len(ary)
+
+	if L != length {
+		err_str := fmt.Sprintf("Expect length to be %d, but got %d", length, L)
+		F.AddError(err_str)
+	}
+
+	return F
+}
+
 // function type used as argument to AfterContent()
 type AfterContentFunc func(F *Frisby, content []byte, err error)
 

@@ -42,6 +42,13 @@ func main() {
 		ExpectJson("url", "http://httpbin.org/post").
 		ExpectJson("headers.Accept", "*/*")
 
+	frisby.Create("Test ExpectJsonLength").
+		Post("http://httpbin.org/post").
+		SetJson([]string{"item1", "item2", "item3"}).
+		Send().
+		ExpectStatus(200).
+		ExpectJsonLength("json", 3)
+
 	frisby.Create("Test AfterJson").
 		Post("http://httpbin.org/post").
 		Send().

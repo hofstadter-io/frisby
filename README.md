@@ -46,52 +46,61 @@ for _,e := range errs {
 }
 ```
 
+There is also a Global object for setting repeated Pre-flight options.
+
+```
+frisby.Global.BasicAuth("username", "password")
+```
+
 ### HTTP Method functions
 
 Your basic HTTP verbs:
 
-- Get(url string)
-- Post(url string)
-- Put(url string)
-- Patch(url string)
-- Delete(url string)
-- Head(url string)
-- Options(url string)
+* Get(url string)
+* Post(url string)
+* Put(url string)
+* Patch(url string)
+* Delete(url string)
+* Head(url string)
+* Options(url string)
 
 ### Pre-flight functions
 
 Functions called before `Send()`
 
+You can also set theses on the `frisby.Global` object for persisting state over multiple requests.
+
 ( Most of these come from [github.com/mozillazg/request](https://github.com/mozillazg/request))
 
-- BasicAuth(username,password string)
-- Proxy(url string)
-- SetHeader(key,value string)
-- SetHeaders(map[string]string)
-- SetCookies(key,value string)
-- SetCookiess(map[string]string)
-- SetDate(key,value string)
-- SetDates(map[string]string)
-- SetParam(key,value string)
-- SetParams(map[string]string)
-- SetJson(interface{})
-- SetFile(filename string)
+* BasicAuth(username,password string)
+* Proxy(url string)
+* SetHeader(key,value string)
+* SetHeaders(map[string]string)
+* SetCookies(key,value string)
+* SetCookiess(map[string]string)
+* SetDate(key,value string)
+* SetDates(map[string]string)
+* SetParam(key,value string)
+* SetParams(map[string]string)
+* SetJson(interface{})
+* SetFile(filename string)
 
 
 ### Post-flight functions
 
 Functions called after `Send()`
 
-- ExpectStatus(code int)
-- ExpectHeader(key, value string)
-- ExpectContent(content string)
-- ExpectJson(path string, value interface{})
-- ExpectJsonType(path string, value_type reflect.Kind)
-- AfterContent( func(Frisby,[]byte,error) )
-- AfterText( func(Frisby,string,error) )
-- AfterJson( func(Frisby,simplejson.Json,error) )
-- PrintBody()
-- PrintReport()
+* ExpectStatus(code int)
+* ExpectHeader(key, value string)
+* ExpectContent(content string)
+* ExpectJson(path string, value interface{})
+* ExpectJsonLength(path string, length int)
+* ExpectJsonType(path string, value_type reflect.Kind)
+* AfterContent( func(Frisby,[]byte,error) )
+* AfterText( func(Frisby,string,error) )
+* AfterJson( func(Frisby,simplejson.Json,error) )
+* PrintBody()
+* PrintReport()
 
 
 ### More examples
