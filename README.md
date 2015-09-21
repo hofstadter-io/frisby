@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/verdverm/frisby.svg?branch=master)](https://travis-ci.org/verdverm/frisby)
 [![GoDoc](https://godoc.org/github.com/verdverm/frisby?status.svg)](https://godoc.org/github.com/verdverm/frisby)
-[![Release](https://img.shields.io/github/release/verdverm/frisby.svg)](https://github.com/verdverm/frisby/releases/tag/1.0)
+[![GitHub release](https://img.shields.io/github/release/qubyte/rubidium.svg)](https://github.com/verdverm/frisby/releases/tag/1.0.1)
 
 REST API testing framework inspired by frisby-js, written in Go
 
