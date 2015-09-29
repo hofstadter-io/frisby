@@ -6,6 +6,8 @@
 
 REST API testing framework inspired by frisby-js, written in Go
 
+![catch!](https://raw.github.com/verdverm/frisby/master/frisby.gif)
+
 ### Installation
 
 ```
