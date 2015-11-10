@@ -106,12 +106,18 @@ func (F *Frisby) SetProxy(url string) *Frisby {
 
 // Set a Header value for the coming request
 func (F *Frisby) SetHeader(key, value string) *Frisby {
+	if F.Req.Headers == nil {
+		F.Req.Headers = make(map[string]string)
+	}
 	F.Req.Headers[key] = value
 	return F
 }
 
 // Set several Headers for the coming request
 func (F *Frisby) SetHeaders(headers map[string]string) *Frisby {
+	if F.Req.Headers == nil {
+		F.Req.Headers = make(map[string]string)
+	}
 	for key, value := range headers {
 		F.Req.Headers[key] = value
 	}
@@ -120,12 +126,18 @@ func (F *Frisby) SetHeaders(headers map[string]string) *Frisby {
 
 // Set a Cookie value for the coming request
 func (F *Frisby) SetCookie(key, value string) *Frisby {
+	if F.Req.Cookies == nil {
+		F.Req.Cookies = make(map[string]string)
+	}
 	F.Req.Cookies[key] = value
 	return F
 }
 
 // Set several Cookie values for the coming request
 func (F *Frisby) SetCookies(cookies map[string]string) *Frisby {
+	if F.Req.Cookies == nil {
+		F.Req.Cookies = make(map[string]string)
+	}
 	for key, value := range cookies {
 		F.Req.Cookies[key] = value
 	}
@@ -143,6 +155,9 @@ func (F *Frisby) SetData(key, value string) *Frisby {
 
 // Set several Form data for the coming request
 func (F *Frisby) SetDatas(datas map[string]string) *Frisby {
+	if F.Req.Data == nil {
+		F.Req.Data = make(map[string]string)
+	}
 	for key, value := range datas {
 		F.Req.Data[key] = value
 	}
@@ -151,12 +166,18 @@ func (F *Frisby) SetDatas(datas map[string]string) *Frisby {
 
 // Set a url Param for the coming request
 func (F *Frisby) SetParam(key, value string) *Frisby {
+	if F.Req.Params == nil {
+		F.Req.Params = make(map[string]string)
+	}
 	F.Req.Params[key] = value
 	return F
 }
 
 // Set several url Param for the coming request
 func (F *Frisby) SetParams(params map[string]string) *Frisby {
+	if F.Req.Params == nil {
+		F.Req.Params = make(map[string]string)
+	}
 	for key, value := range params {
 		F.Req.Params[key] = value
 	}
