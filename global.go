@@ -41,12 +41,18 @@ func (G *global_data) SetProxy(url string) *global_data {
 
 // Set a Header value for the coming request
 func (G *global_data) SetHeader(key, value string) *global_data {
+	if G.Req.Headers == nil {
+		G.Req.Headers = make(map[string]string)
+	}
 	G.Req.Headers[key] = value
 	return G
 }
 
 // Set several Headers for the coming request
 func (G *global_data) SetHeaders(headers map[string]string) *global_data {
+	if G.Req.Headers == nil {
+		G.Req.Headers = make(map[string]string)
+	}
 	for key, value := range headers {
 		G.Req.Headers[key] = value
 	}
@@ -55,12 +61,18 @@ func (G *global_data) SetHeaders(headers map[string]string) *global_data {
 
 // Set a Cookie value for the coming request
 func (G *global_data) SetCookie(key, value string) *global_data {
+	if G.Req.Cookies == nil {
+		G.Req.Cookies = make(map[string]string)
+	}
 	G.Req.Cookies[key] = value
 	return G
 }
 
 // Set several Cookie values for the coming request
 func (G *global_data) SetCookies(cookies map[string]string) *global_data {
+	if G.Req.Cookies == nil {
+		G.Req.Cookies = make(map[string]string)
+	}
 	for key, value := range cookies {
 		G.Req.Cookies[key] = value
 	}
@@ -78,6 +90,9 @@ func (G *global_data) SetData(key, value string) *global_data {
 
 // Set several Gorm data for the coming request
 func (G *global_data) SetDatas(datas map[string]string) *global_data {
+	if G.Req.Data == nil {
+		G.Req.Data = make(map[string]string)
+	}
 	for key, value := range datas {
 		G.Req.Data[key] = value
 	}
@@ -86,12 +101,18 @@ func (G *global_data) SetDatas(datas map[string]string) *global_data {
 
 // Set a url Param for the coming request
 func (G *global_data) SetParam(key, value string) *global_data {
+	if G.Req.Params == nil {
+		G.Req.Params = make(map[string]string)
+	}
 	G.Req.Params[key] = value
 	return G
 }
 
 // Set several url Param for the coming request
 func (G *global_data) SetParams(params map[string]string) *global_data {
+	if G.Req.Params == nil {
+		G.Req.Params = make(map[string]string)
+	}
 	for key, value := range params {
 		G.Req.Params[key] = value
 	}
@@ -105,7 +126,7 @@ func (G *global_data) SetJson(json interface{}) *global_data {
 }
 
 // Add a file to the Gorm data for the coming request
-func (G *global_data) AddGile(filename string) *global_data {
+func (G *global_data) AddFile(filename string) *global_data {
 	file, err := os.Open(filename)
 	if err != nil {
 		G.AddError("Global", err.Error())
