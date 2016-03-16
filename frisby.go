@@ -248,7 +248,10 @@ func (F *Frisby) AddError(err_str string) *Frisby {
 //
 // This function should be called last
 func (F *Frisby) Error() error {
-	return F.Errs[len(F.Errs)-1]
+	if len(F.Errs) > 0 {
+		return F.Errs[len(F.Errs)-1]
+	}
+	return nil
 }
 
 // Get all errors for the Frisby object
