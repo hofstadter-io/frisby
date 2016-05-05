@@ -3,6 +3,7 @@ package frisby
 import (
 	"fmt"
 	"reflect"
+	"strconv"
 	"strings"
 
 	"github.com/bitly/go-simplejson"
@@ -63,8 +64,22 @@ func (F *Frisby) ExpectJson(path string, value interface{}) *Frisby {
 	}
 
 	if path != "" {
-		path_items := strings.Split(path, ".")
-		simp_json = simp_json.GetPath(path_items...)
+		// Loop over each path item and progress down the json path.
+		for _, segment := range strings.Split(path, ".") {
+			processed := false
+			// If the path segment is an integer, and we're at an array, access the index.
+			index, err := strconv.Atoi(segment)
+			if err == nil {
+				if _, err := simp_json.Array(); err == nil {
+					simp_json = simp_json.GetIndex(index)
+					processed = true
+				}
+			}
+
+			if !processed {
+				simp_json = simp_json.Get(segment)
+			}
+		}
 	}
 	json := simp_json.Interface()
 
