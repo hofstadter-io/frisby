@@ -63,7 +63,7 @@ func (F *Frisby) ExpectJson(path string, value interface{}) *Frisby {
 	}
 
 	if path != "" {
-		path_items := strings.Split(path, ".")
+		path_items := strings.Split(path, Global.PathSeparator)
 		simp_json = simp_json.GetPath(path_items...)
 	}
 	json := simp_json.Interface()
@@ -112,7 +112,7 @@ func (F *Frisby) ExpectJsonType(path string, val_type reflect.Kind) *Frisby {
 	}
 
 	if path != "" {
-		path_items := strings.Split(path, ".")
+		path_items := strings.Split(path, Global.PathSeparator)
 		json = json.GetPath(path_items...)
 	}
 
@@ -141,7 +141,7 @@ func (F *Frisby) ExpectJsonLength(path string, length int) *Frisby {
 	}
 
 	if path != "" {
-		path_items := strings.Split(path, ".")
+		path_items := strings.Split(path, Global.PathSeparator)
 		json = json.GetPath(path_items...)
 	}
 
