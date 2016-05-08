@@ -65,7 +65,8 @@ func (F *Frisby) ExpectJson(path string, value interface{}) *Frisby {
 
 	if path != "" {
 		// Loop over each path item and progress down the json path.
-		for _, segment := range strings.Split(path, ".") {
+		path_items := strings.Split(path, Global.PathSeparator)
+		for _, segment := range path_items {
 			processed := false
 			// If the path segment is an integer, and we're at an array, access the index.
 			index, err := strconv.Atoi(segment)
@@ -127,7 +128,7 @@ func (F *Frisby) ExpectJsonType(path string, val_type reflect.Kind) *Frisby {
 	}
 
 	if path != "" {
-		path_items := strings.Split(path, ".")
+		path_items := strings.Split(path, Global.PathSeparator)
 		json = json.GetPath(path_items...)
 	}
 
@@ -135,7 +136,7 @@ func (F *Frisby) ExpectJsonType(path string, val_type reflect.Kind) *Frisby {
 
 	json_val := reflect.ValueOf(json_json)
 	if val_type != json_val.Kind() {
-		err_str := fmt.Sprintf("Expect Json %q type to be %q, but got %q", path, val_type, json_val.Type())
+		err_str := fmt.Sprintf("Expect Json %q type to be %q, but got %T", path, val_type, json_json)
 		F.AddError(err_str)
 	}
 
@@ -156,7 +157,7 @@ func (F *Frisby) ExpectJsonLength(path string, length int) *Frisby {
 	}
 
 	if path != "" {
-		path_items := strings.Split(path, ".")
+		path_items := strings.Split(path, Global.PathSeparator)
 		json = json.GetPath(path_items...)
 	}
 

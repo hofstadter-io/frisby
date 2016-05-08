@@ -19,12 +19,17 @@ type global_data struct {
 
 	PrintProgressName bool
 	PrintProgressDot  bool
+
+	PathSeparator string
 }
+
+const DefaultPathSeparator = "."
 
 func init() {
 	Global.Req = request.NewRequest(new(http.Client))
 	Global.Errs = make(map[string][]error, 0)
 	Global.PrintProgressDot = true
+	Global.PathSeparator = DefaultPathSeparator
 }
 
 // Set BasicAuth values for the coming request
