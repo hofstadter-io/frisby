@@ -120,7 +120,7 @@ func (F *Frisby) ExpectJsonType(path string, val_type reflect.Kind) *Frisby {
 
 	json_val := reflect.ValueOf(json_json)
 	if val_type != json_val.Kind() {
-		err_str := fmt.Sprintf("Expect Json %q type to be %q, but got %q", path, val_type, json_val.Type())
+		err_str := fmt.Sprintf("Expect Json %q type to be %q, but got %T", path, val_type, json_json)
 		F.AddError(err_str)
 	}
 
