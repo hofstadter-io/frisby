@@ -6,8 +6,6 @@
 
 REST API testing framework inspired by frisby-js, written in Go
 
-![catch!](https://raw.github.com/verdverm/frisby/master/frisby.gif)
-
 ### Installation
 
 ```
@@ -211,3 +209,6 @@ For 7 requests made
         -  Expected Status 400, but got 200: "200 OK"
         -  Expected Body to contain "A string which won't be found", but it was missing
 ```
+
+![catch!](https://raw.github.com/verdverm/frisby/master/frisby.gif)
+
