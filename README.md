@@ -47,9 +47,10 @@ Then assert and inspect the response:
 
 ```
 F.ExpectStatus(200).
-    ExpectJson("nested.path.tovalue", "sometext").
-    ExpectJson("nested.path2.tonum", 23).
-    ExpectJsonLength("data", 3).
+    ExpectJson("nested.path.to.value", "sometext").
+    ExpectJson("nested.path.to.object", golangObject).
+    ExpectJson("nested.array.7.id", 23).
+    ExpectJsonLength("nested.array", 8).
     AfterJson(func(F *frisby.Frisby, json *simplejson.Json, err error) {
 		val, _ := json.Get("proxy").String()
 		frisby.Global.SetProxy(val)
