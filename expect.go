@@ -107,7 +107,7 @@ func (F *Frisby) ExpectJson(path string, value interface{}) *Frisby {
 	}
 
 	if !equal {
-		err_str := fmt.Sprintf("ExpectJson equality test failed for %q, got type: %v", path, reflect.TypeOf(json))
+		err_str := fmt.Sprintf("ExpectJson equality test failed for %q, got: %v", path, json)
 		F.AddError(err_str)
 	}
 
