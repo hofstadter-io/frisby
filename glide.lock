@@ -1,0 +1,15 @@
+hash: 0d97a97f7ae077155410f0b0d7fa9e8c97db0a534364b3e37cb412b18c5065e2
+updated: 2016-06-30T18:57:24.896487813-06:00
+imports:
+- name: github.com/bitly/go-simplejson
+  version: aabad6e819789e569bd6aabf444c935aa9ba1e44
+- name: github.com/mozillazg/request
+  version: 82f729b79d90a2a46e2e7f71bb302afdf65fdbb1
+- name: github.com/verdverm/frisby
+  version: 9c740cc78802630b658e308758c27571ad8322e3
+- name: golang.org/x/net
+  version: c4c3ea71919de159c9e246d7be66deb7f0a39a58
+  subpackages:
+  - proxy
+  - publicsuffix
+devImports: []

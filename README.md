@@ -5,6 +5,32 @@
 [![GitHub release](https://img.shields.io/github/release/qubyte/rubidium.svg)](https://github.com/verdverm/frisby)
 
 REST API testing framework inspired by frisby-js, written in Go
+### Proposals
+
+I'm starting to work on `frisby` again with the following ideas:
+
+1. Read specification files
+  - pyresttest
+  - frisby.js
+  - swagger spec
+  - other?
+1. Use as a load tester
+  - like Locust.io
+  - distributed
+1. UI
+  - Dashboard
+  - Analytics
+  - Reports
+  - Manage multiple instances
+2. Backend
+  - master/minions
+  - db for analytics
+  - api for UI / clients [Goa](http://goa.domain)
+  - federation of minion groups?
+
+Please comment on any issues or PRs related to these proposals.
+If you don't see an issue, PR, or idea; definitely add it!
+
 
 ### Installation
 

@@ -78,9 +78,9 @@ func ExampleFrisby_AfterJson() {
 		Send().
 		ExpectStatus(200).
 		AfterJson(func(F *frisby.Frisby, json *simplejson.Json, err error) {
-		val, _ := json.Get("url").String()
-		fmt.Println("url =", val)
-	})
+			val, _ := json.Get("url").String()
+			fmt.Println("url =", val)
+		})
 
 	// Output: url = http://httpbin.org/post
 }

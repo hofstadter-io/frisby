@@ -1,0 +1,5 @@
+package: .
+import:
+- package: github.com/bitly/go-simplejson
+- package: github.com/mozillazg/request
+- package: github.com/verdverm/frisby
