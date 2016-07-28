@@ -34,7 +34,7 @@ If you don't see an issue, PR, or idea; definitely add it!
 
 ### Installation
 
-```
+```shell
 go get -u github.com/verdverm/frisby
 ```
 
@@ -42,7 +42,7 @@ go get -u github.com/verdverm/frisby
 
 First create a Frisby object:
 
-```
+```go
 // create an object with a given name (used in the report)
 F := frisby.Create("Test successful user login").
     Get("https://golang.org")
@@ -50,7 +50,7 @@ F := frisby.Create("Test successful user login").
 
 Add any pre-flight data
 
-```
+```go
 F.SetHeader("Content-Type": "application/json").
 	SetHeader("Accept", "application/json, text/plain, */*").
 	SetJson([]string{"item1", "item2", "item3"})
@@ -58,20 +58,20 @@ F.SetHeader("Content-Type": "application/json").
 
 There is also a Global object for setting repeated Pre-flight options.
 
-```
+```go
 frisby.Global.BasicAuth("username", "password").
 	SetHeader("Authorization", "Bearer " + TOKEN)
 ```
 
 Next send the request:
 
-```
+```go
 F.Send()
 ```
 
 Then assert and inspect the response:
 
-```
+```go
 F.ExpectStatus(200).
     ExpectJson("nested.path.to.value", "sometext").
     ExpectJson("nested.path.to.object", golangObject).
@@ -85,7 +85,7 @@ F.ExpectStatus(200).
 
 Finally, print out a report of the tests
 
-```
+```go
 frisby.Global.PrintReport()
 ```
 
@@ -93,7 +93,7 @@ Check any error(s), however the global report prints any that occured as well
 
 `err := F.Error()`
 
-```
+```go
 errs := F.Errors()
 for _,e := range errs {
 	fmt.Println("Error: ", e)
@@ -156,7 +156,7 @@ Functions called after `Send()`
 
 You can find a longer example [here](https://github.com/verdverm/pomopomo/tree/master/test/api)
 
-```
+```go
 package main
 
 import (
