@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"path/filepath"
 
 	"github.com/mozillazg/request"
 )
@@ -201,7 +202,10 @@ func (F *Frisby) AddFile(key, filename string) *Frisby {
 		if len(key) == 0 {
 			key = defaultFileKey
 		}
-		fileField := request.FileField{key, filename, file}
+		fileField := request.FileField{
+			FieldName: key,
+			FileName:  filepath.Base(filename),
+			File:      file}
 		F.Req.Files = append(F.Req.Files, fileField)
 	}
 	return F
