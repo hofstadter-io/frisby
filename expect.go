@@ -9,6 +9,18 @@ import (
 	"github.com/bitly/go-simplejson"
 )
 
+// ExpectFunc function type used as argument to Expect()
+type ExpectFunc func(F *Frisby) (bool, string)
+
+// Expect Checks according to the given function, which allows you to describe any kind of assertion.
+func (F *Frisby) Expect(foo ExpectFunc) *Frisby {
+	Global.NumAsserts++
+	if ok, err_str := foo(F); !ok {
+		F.AddError(err_str)
+	}
+	return F
+}
+
 // Checks the response status code
 func (F *Frisby) ExpectStatus(code int) *Frisby {
 	Global.NumAsserts++
