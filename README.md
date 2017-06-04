@@ -148,8 +148,10 @@ Functions called after `Send()`
 * AfterContent( func(Frisby,[]byte,error) )
 * AfterText( func(Frisby,string,error) )
 * AfterJson( func(Frisby,simplejson.Json,error) )
+* PauseTest(t time.Duration)
 * PrintBody()
 * PrintReport()
+* PrintGoTestReport()
 
 
 ### More examples
@@ -238,4 +240,3 @@ For 7 requests made
 ```
 
 ![catch!](https://raw.github.com/verdverm/frisby/master/frisby.gif)
-

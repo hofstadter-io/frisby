@@ -248,3 +248,18 @@ func (F *Frisby) PrintReport() *Frisby {
 
 	return F
 }
+
+// Prints a report for the Frisby Object in go_test format
+//
+// If there are any errors, they will all be printed as well
+func (F *Frisby) PrintGoTestReport() *Frisby {
+	if len(F.Errs) == 0 {
+		fmt.Printf("=== RUN   %s\n--- PASS: %s (%.2fs)\n", F.Name, F.Name, F.ExecutionTime)
+	} else {
+		fmt.Printf("=== RUN   %s\n--- FAIL: %s (%.2fs)\n", F.Name, F.Name, F.ExecutionTime)
+		for _, e := range F.Errs {
+			fmt.Println("	", e)
+		}
+	}
+	return F
+}
