@@ -5,12 +5,15 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"path/filepath"
 	"time"
 
 	"github.com/mozillazg/request"
 )
 
 var Global global_data
+
+const defaultFileKey = "file"
 
 type Frisby struct {
 	Name   string
@@ -196,12 +199,18 @@ func (F *Frisby) SetJson(json interface{}) *Frisby {
 }
 
 // Add a file to the Form data for the coming request
-func (F *Frisby) AddFile(filename string) *Frisby {
+func (F *Frisby) AddFile(key, filename string) *Frisby {
 	file, err := os.Open(filename)
 	if err != nil {
 		F.Errs = append(F.Errs, err)
 	} else {
-		fileField := request.FileField{"file", filename, file}
+		if len(key) == 0 {
+			key = defaultFileKey
+		}
+		fileField := request.FileField{
+			FieldName: key,
+			FileName:  filepath.Base(filename),
+			File:      file}
 		F.Req.Files = append(F.Req.Files, fileField)
 	}
 	return F
