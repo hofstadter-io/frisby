@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"time"
 
 	"github.com/mozillazg/request"
 )
@@ -19,9 +20,10 @@ type Frisby struct {
 	Url    string
 	Method string
 
-	Req  *request.Request
-	Resp *request.Response
-	Errs []error
+	Req           *request.Request
+	Resp          *request.Response
+	Errs          []error
+	ExecutionTime float64
 }
 
 // Creates a new Frisby object with the given name.
@@ -42,6 +44,9 @@ func Create(name string) *Frisby {
 	F.SetParams(Global.Req.Params)
 	F.Req.Json = Global.Req.Json
 	F.Req.Files = append(F.Req.Files, Global.Req.Files...)
+
+	// initialize request
+	F.Req.Params = make(map[string]string)
 
 	return F
 }
@@ -217,8 +222,10 @@ func (F *Frisby) Send() *Frisby {
 	if Global.PrintProgressName {
 		fmt.Println(F.Name)
 	} else if Global.PrintProgressDot {
-		fmt.Printf(".")
+		fmt.Printf("")
 	}
+
+	start := time.Now()
 
 	var err error
 	switch F.Method {
@@ -237,6 +244,8 @@ func (F *Frisby) Send() *Frisby {
 	case "OPTIONS":
 		F.Resp, err = F.Req.Options(F.Url)
 	}
+
+	F.ExecutionTime = time.Since(start).Seconds()
 
 	if err != nil {
 		F.Errs = append(F.Errs, err)
@@ -268,4 +277,10 @@ func (F *Frisby) Error() error {
 // This function should be called last
 func (F *Frisby) Errors() []error {
 	return F.Errs
+}
+
+// Pause your testrun for a defined amount of seconds
+func (F *Frisby) PauseTest(t time.Duration) *Frisby {
+	time.Sleep(t * time.Second)
+	return nil
 }
