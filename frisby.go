@@ -42,6 +42,9 @@ func Create(name string) *Frisby {
 	F.Req.Json = Global.Req.Json
 	F.Req.Files = append(F.Req.Files, Global.Req.Files...)
 
+	// initialize request
+	F.Req.Params = make(map[string]string)
+
 	return F
 }
 
