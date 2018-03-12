@@ -51,52 +51,60 @@ func Create(name string) *Frisby {
 	return F
 }
 
+func getURL(url string) string {
+	if Global.BaseURL == "" {
+		return url
+	} else {
+		return Global.BaseURL + url
+	}
+}
+
 // Set the HTTP method to GET for the given URL
 func (F *Frisby) Get(url string) *Frisby {
 	F.Method = "GET"
-	F.Url = url
+	F.Url = getURL(url)
 	return F
 }
 
 // Set the HTTP method to POST for the given URL
 func (F *Frisby) Post(url string) *Frisby {
 	F.Method = "POST"
-	F.Url = url
+	F.Url = getURL(url)
 	return F
 }
 
 // Set the HTTP method to PUT for the given URL
 func (F *Frisby) Put(url string) *Frisby {
 	F.Method = "PUT"
-	F.Url = url
+	F.Url = getURL(url)
 	return F
 }
 
 // Set the HTTP method to PATCH for the given URL
 func (F *Frisby) Patch(url string) *Frisby {
 	F.Method = "PATCH"
-	F.Url = url
+	F.Url = getURL(url)
 	return F
 }
 
 // Set the HTTP method to DELETE for the given URL
 func (F *Frisby) Delete(url string) *Frisby {
 	F.Method = "DELETE"
-	F.Url = url
+	F.Url = getURL(url)
 	return F
 }
 
 // Set the HTTP method to HEAD for the given URL
 func (F *Frisby) Head(url string) *Frisby {
 	F.Method = "HEAD"
-	F.Url = url
+	F.Url = getURL(url)
 	return F
 }
 
 // Set the HTTP method to OPTIONS for the given URL
 func (F *Frisby) Options(url string) *Frisby {
 	F.Method = "OPTIONS"
-	F.Url = url
+	F.Url = getURL(url)
 	return F
 }
 

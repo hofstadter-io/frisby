@@ -13,6 +13,8 @@ type global_data struct {
 	Req  *request.Request
 	Errs map[string][]error
 
+	BaseURL string
+
 	NumRequest int
 	NumAsserts int
 	NumErrored int
@@ -30,6 +32,7 @@ func init() {
 	Global.Errs = make(map[string][]error, 0)
 	Global.PrintProgressDot = true
 	Global.PathSeparator = DefaultPathSeparator
+	Global.BaseURL = ""
 }
 
 // Set BasicAuth values for the coming request
@@ -175,5 +178,10 @@ func (G *global_data) PrintReport() *global_data {
 		}
 	}
 
+	return G
+}
+
+func (G *global_data) SetBaseURL(url string) *global_data {
+	G.BaseURL = url
 	return G
 }

@@ -3,6 +3,7 @@ package frisby_test
 import (
 	"fmt"
 	"reflect"
+	"testing"
 
 	"github.com/bitly/go-simplejson"
 	"github.com/verdverm/frisby"
@@ -10,6 +11,16 @@ import (
 
 func init() {
 	frisby.Global.PrintProgressDot = false
+	frisby.Global.SetBaseURL("https://gocn.io/")
+}
+
+func TestBaseURL(t *testing.T) {
+	frisby.Create("Test GET Go homepage").
+		Get("question/265").
+		Send().
+		ExpectStatus(200).
+		ExpectContent("case").
+		PrintReport()
 }
 
 func ExampleFrisby_Get() {
