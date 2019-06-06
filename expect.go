@@ -1,6 +1,7 @@
 package frisby
 
 import (
+	"encoding/json"
 	"fmt"
 	"reflect"
 	"strconv"
@@ -124,6 +125,46 @@ func (F *Frisby) ExpectJson(path string, value interface{}) *Frisby {
 	}
 
 	return F
+}
+
+
+// ExpectBodyJson checks if the body of the response
+// equal the bpdyJson
+//
+// bodyJson the except response body json string
+func (F *Frisby) ExpectBodyJson(bodyJson string) *Frisby {
+	Global.NumAsserts++
+	text, err :=F.Resp.Text()
+	if err != nil {
+		F.AddError(err.Error())
+		return F
+	}
+	equal, err := areEqualJSON(bodyJson, text)
+	if err != nil {
+		F.AddError(err.Error())
+		return F
+	}
+	if !equal {
+		F.AddError(fmt.Sprintf("ExpectBody equality test failed for %s, got value: %s", bodyJson, text))
+	}
+	return F
+}
+
+func areEqualJSON(s1, s2 string) (bool, error) {
+	var o1 interface{}
+	var o2 interface{}
+
+	var err error
+	err = json.Unmarshal([]byte(s1), &o1)
+	if err != nil {
+		return false, fmt.Errorf("Error mashalling string %s :: %s", s1, err.Error())
+	}
+	err = json.Unmarshal([]byte(s2), &o2)
+	if err != nil {
+		return false, fmt.Errorf("Error mashalling string %s :: %s", s2, err.Error())
+	}
+
+	return reflect.DeepEqual(o1, o2), nil
 }
 
 // ExpectJsonType checks if the types of the response
