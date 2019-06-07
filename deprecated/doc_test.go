@@ -1,4 +1,4 @@
-package frisby_test
+package aidi
 
 import (
 	"fmt"

@@ -1,4 +1,4 @@
-package frisby
+package aidi
 
 import (
 	"errors"
@@ -25,6 +25,7 @@ type Frisby struct {
 	Errs          []error
 	ExecutionTime float64
 }
+
 
 // Creates a new Frisby object with the given name.
 //

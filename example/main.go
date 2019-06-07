@@ -2,61 +2,25 @@ package main
 
 import (
 	"fmt"
-	"reflect"
-
-	"github.com/bitly/go-simplejson"
-	"github.com/verdverm/frisby"
+	"aidi"
+	"strings"
 )
-
 func main() {
-	fmt.Println("Frisby!\n")
+	fmt.Println("Aidi!\n")
 
-	frisby.Create("Test GET Go homepage").
-		Get("http://golang.org").
+	//aidi.CreateCase("Test GET Go homepage").
+	//	Get("http://golang.org").
+	//	Send().
+	//	ExpectStatus(200)
+	payload := strings.NewReader(`{
+	"current_pwd":"123456",
+	"new_pwd":"123456"
+}`)
+	aidi.CreateCase("Test GET Go homepage").
+		Put("http://localhost:3000/1/api/v1/account").
+		SetBody(payload).
 		Send().
 		ExpectStatus(200).
-		ExpectContent("The Go Programming Language")
-
-	frisby.Create("Test GET Go homepage (which fails)").
-		Get("http://golang.org").
-		Send().
-		ExpectStatus(400).
-		ExpectContent("A string which won't be found")
-
-	frisby.Create("Test POST").
-		Post("http://httpbin.org/post").
-		SetData("test_key", "test_value").
-		Send().
-		ExpectStatus(200)
-
-	frisby.Create("Test ExpectJsonType").
-		Post("http://httpbin.org/post").
-		Send().
-		ExpectStatus(200).
-		ExpectJsonType("url", reflect.String)
-
-	frisby.Create("Test ExpectJson").
-		Post("http://httpbin.org/post").
-		Send().
-		ExpectStatus(200).
-		ExpectJson("url", "http://httpbin.org/post").
-		ExpectJson("headers.Accept", "*/*")
-
-	frisby.Create("Test ExpectJsonLength").
-		Post("http://httpbin.org/post").
-		SetJson([]string{"item1", "item2", "item3"}).
-		Send().
-		ExpectStatus(200).
-		ExpectJsonLength("json", 3)
-
-	frisby.Create("Test AfterJson").
-		Post("http://httpbin.org/post").
-		Send().
-		ExpectStatus(200).
-		AfterJson(func(F *frisby.Frisby, json *simplejson.Json, err error) {
-		val, _ := json.Get("url").String()
-		frisby.Global.SetProxy(val)
-	})
-
-	frisby.Global.PrintReport()
+		PrintReport()
+	aidi.Global.PrintReport()
 }
