@@ -1,0 +1,2 @@
+Test GET Go homepage|GET|http://golang.org|||||200|The Go Programming Language
+Test GET Go homepage (which fails)|GET|http://golang.org|||||400|A string which won't be found

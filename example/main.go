@@ -9,7 +9,7 @@ import (
 )
 
 func oldmain() {
-	fmt.Println("Frisby!\n")
+	fmt.Println("Frisby!")
 
 	frisby.Create("Test GET Go homepage").
 		Get("http://golang.org").
