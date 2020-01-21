@@ -103,6 +103,7 @@ func iterateroutes(routesfile string) {
 	// Parse the file
 	r := csv.NewReader(csvfile)
 	r.Comma = '|'
+	r.LazyQuotes = true
 
 	// Iterate through the routes
 	for {
