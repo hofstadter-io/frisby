@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"reflect"
 
+	"github.com/EducationPlannerBC/frisby"
 	"github.com/bitly/go-simplejson"
-	"github.com/verdverm/frisby"
 )
 
-func main() {
+func oldmain() {
 	fmt.Println("Frisby!\n")
 
 	frisby.Create("Test GET Go homepage").
@@ -54,9 +54,9 @@ func main() {
 		Send().
 		ExpectStatus(200).
 		AfterJson(func(F *frisby.Frisby, json *simplejson.Json, err error) {
-		val, _ := json.Get("url").String()
-		frisby.Global.SetProxy(val)
-	})
+			val, _ := json.Get("url").String()
+			frisby.Global.SetProxy(val)
+		})
 
 	frisby.Global.PrintReport()
 }
