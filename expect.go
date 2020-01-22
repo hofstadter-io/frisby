@@ -103,17 +103,15 @@ func (F *Frisby) ExpectJSON(path string, value interface{}) *Frisby {
 		if err != nil {
 			F.AddError(err.Error())
 			return F
-		} else {
-			equal = (val == value.(int))
 		}
+		equal = (val == value.(int))
 	case reflect.Float64:
 		val, err := simpJSON.Float64()
 		if err != nil {
 			F.AddError(err.Error())
 			return F
-		} else {
-			equal = (val == value.(float64))
 		}
+		equal = (val == value.(float64))
 	default:
 		equal = reflect.DeepEqual(value, json)
 	}
