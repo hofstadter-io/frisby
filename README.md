@@ -53,7 +53,7 @@ Add any pre-flight data
 ```go
 F.SetHeader("Content-Type": "application/json").
 	SetHeader("Accept", "application/json, text/plain, */*").
-	SetJson([]string{"item1", "item2", "item3"})
+	SetJSON([]string{"item1", "item2", "item3"})
 ```
 
 There is also a Global object for setting repeated Pre-flight options.
@@ -73,11 +73,11 @@ Then assert and inspect the response:
 
 ```go
 F.ExpectStatus(200).
-    ExpectJson("nested.path.to.value", "sometext").
-    ExpectJson("nested.path.to.object", golangObject).
-    ExpectJson("nested.array.7.id", 23).
-    ExpectJsonLength("nested.array", 8).
-    AfterJson(func(F *frisby.Frisby, json *simplejson.Json, err error) {
+    ExpectJSON("nested.path.to.value", "sometext").
+    ExpectJSON("nested.path.to.object", golangObject).
+    ExpectJSON("nested.array.7.id", 23).
+    ExpectJSONLength("nested.array", 8).
+    AfterJSON(func(F *frisby.Frisby, json *simplejson.Json, err error) {
 		val, _ := json.Get("proxy").String()
 		frisby.Global.SetProxy(val)
 	})
@@ -131,7 +131,7 @@ You can also set theses on the `frisby.Global` object for persisting state over 
 * SetDates(map[string]string)
 * SetParam(key,value string)
 * SetParams(map[string]string)
-* SetJson(interface{})
+* SetJSON(interface{})
 * SetFile(filename string)
 
 
@@ -142,12 +142,12 @@ Functions called after `Send()`
 * ExpectStatus(code int)
 * ExpectHeader(key, value string)
 * ExpectContent(content string)
-* ExpectJson(path string, value interface{})
-* ExpectJsonLength(path string, length int)
-* ExpectJsonType(path string, value_type reflect.Kind)
+* ExpectJSON(path string, value interface{})
+* ExpectJSONLength(path string, length int)
+* ExpectJSONType(path string, value_type reflect.Kind)
 * AfterContent( func(Frisby,[]byte,error) )
 * AfterText( func(Frisby,string,error) )
-* AfterJson( func(Frisby,simplejson.Json,error) )
+* AfterJSON( func(Frisby,simplejson.Json,error) )
 * PauseTest(t time.Duration)
 * PrintBody()
 * PrintReport()
@@ -190,31 +190,31 @@ func main() {
 		Send().
 		ExpectStatus(200)
 
-	frisby.Create("Test ExpectJsonType").
+	frisby.Create("Test ExpectJSONType").
 		Post("http://httpbin.org/post").
 		Send().
 		ExpectStatus(200).
-		ExpectJsonType("url", reflect.String)
+		ExpectJSONType("url", reflect.String)
 
-	frisby.Create("Test ExpectJson").
+	frisby.Create("Test ExpectJSON").
 		Post("http://httpbin.org/post").
 		Send().
 		ExpectStatus(200).
-		ExpectJson("url", "http://httpbin.org/post").
-		ExpectJson("headers.Accept", "*/*")
+		ExpectJSON("url", "http://httpbin.org/post").
+		ExpectJSON("headers.Accept", "*/*")
 
-	frisby.Create("Test ExpectJsonLength (which fails)").
+	frisby.Create("Test ExpectJSONLength (which fails)").
 		Post("http://httpbin.org/post").
-		SetJson([]string{"item1", "item2", "item3"}).
+		SetJSON([]string{"item1", "item2", "item3"}).
 		Send().
 		ExpectStatus(200).
-		ExpectJsonLength("json", 4)
+		ExpectJSONLength("json", 4)
 
-	frisby.Create("Test AfterJson").
+	frisby.Create("Test AfterJSON").
 		Post("http://httpbin.org/post").
 		Send().
 		ExpectStatus(200).
-		AfterJson(func(F *frisby.Frisby, json *simplejson.Json, err error) {
+		AfterJSON(func(F *frisby.Frisby, json *simplejson.Json, err error) {
 		val, _ := json.Get("url").String()
 		frisby.Global.SetProxy(val)
 	})
@@ -232,7 +232,7 @@ Frisby!
 .......
 For 7 requests made
   FAILED  [3/13]
-      [Test ExpectJsonLength]
+      [Test ExpectJSONLength]
         -  Expect length to be 4, but got 3
       [Test GET Go homepage (which fails)]
         -  Expected Status 400, but got 200: "200 OK"
