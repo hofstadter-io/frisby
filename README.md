@@ -1,13 +1,16 @@
 # frisby
 
-[![Build Status](https://travis-ci.org/EducationPlannerBC/frisby.svg?branch=master)](https://travis-ci.org/EducationPlannerBC/frisby)
+<!-- [![Build Status](https://travis-ci.org/EducationPlannerBC/frisby.svg?branch=master)](https://travis-ci.org/EducationPlannerBC/frisby)
 [![GoDoc](https://godoc.org/github.com/EducationPlannerBC/frisby?status.svg)](https://godoc.org/github.com/EducationPlannerBC/frisby)
 [![GitHub release](https://img.shields.io/github/release/qubyte/rubidium.svg)](https://github.com/EducationPlannerBC/frisby)
-
+-->
 REST API testing framework inspired by frisby-js, written in Go
-### Proposals
 
-I'm starting to work on `frisby` again with the following ideas:
+Forked from https://github.com/verdverm/frisby
+
+### Proposals (Historical)
+
+<!-- I'm starting to work on `frisby` again with the following ideas: -->
 
 1. Read specification files
   - pyresttest
@@ -28,8 +31,8 @@ I'm starting to work on `frisby` again with the following ideas:
   - api for UI / clients [Goa](http://goa.domain)
   - federation of minion groups?
 
-Please comment on any issues or PRs related to these proposals.
-If you don't see an issue, PR, or idea; definitely add it!
+<!-- Please comment on any issues or PRs related to these proposals.
+If you don't see an issue, PR, or idea; definitely add it! -->
 
 
 ### Installation
