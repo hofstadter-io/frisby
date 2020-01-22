@@ -1,2 +1,4 @@
 Test GET Go homepage|GET|http://golang.org|||||200|The Go Programming Language
-Test GET Go homepage (which fails)|GET|http://golang.org|||||400|A string which won't be found
+Test GET Go homepage (FAILS ON BOTH EXPECTED STATUS AND BODY)|GET|http://golang.org|||||400|A string which won't be found
+Test POST|POST|http://httpbin.org/post|test_key: test_value||||200|
+Test POST with JSON|POST|http://httpbin.org/post|authorization: Bearer abc|content-type: application/json||{"username": "testuser@example.com","password": "abc123","firstName": "test","lastName": "user","isActive": true,"root": true}|200|

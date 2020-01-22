@@ -44,9 +44,6 @@ func getMethod(testname string, url string, header1 string, header2 string, head
 	if err != nil {
 		log.Fatal(err)
 	}
-	if len(res) == 2 {
-		F.SetHeader(res[0], res[1])
-	}
 	F.Send().ExpectStatus(i)
 	if expected != "" {
 		F.ExpectContent(expected)
@@ -55,40 +52,69 @@ func getMethod(testname string, url string, header1 string, header2 string, head
 	// F.PrintGoTestReport()
 }
 
-// func postMethod1(url string, contentType string, data string) {
-// 	postData := strings.NewReader(data)
-// 	response, err := http.Post(url, contentType, postData)
-// 	if err != nil {
-// 		log.Fatal(err)
-// 	}
-// 	defer response.Body.Close()
-// 	body, err := ioutil.ReadAll(response.Body)
-// 	if err != nil {
-// 		log.Fatal(err)
-// 	}
-// 	fmt.Printf("%s", body)
-// }
+func postMethod(testname string, url string, header1 string, header2 string, header3 string, jsondata string, status string, expected string) {
+	F := frisby.Create(testname).
+		Post(url)
+	var res []string
+	if header1 != "" {
+		res = strings.Split(header1, ":")
+	}
+	if len(res) == 2 {
+		F.SetHeader(res[0], res[1])
+	}
+	if header2 != "" {
+		res = strings.Split(header2, ":")
+	}
+	if len(res) == 2 {
+		F.SetHeader(res[0], res[1])
+	}
+	if header3 != "" {
+		res = strings.Split(header3, ":")
+	}
+	if len(res) == 2 {
+		F.SetHeader(res[0], res[1])
+	}
+	if jsondata != "" {
+		F.SetJSON(jsondata)
+	}
+	i, err := strconv.Atoi(status)
+	if err != nil {
+		log.Fatal(err)
+	}
+	F.Send().ExpectStatus(i)
+	if expected != "" {
+		F.ExpectContent(expected)
+	}
+	//F.PrintBody()
+}
 
 func checkRoute(record []string) {
 	if len(record) != 9 {
 		fmt.Println("The format of the csv file is invalid!")
 		os.Exit(1)
 	}
+
 	testname := record[0]
 	method := record[1]
 	url := record[2]
-	header1 := record[3]
-	header2 := record[4]
-	header3 := record[5]
-	header4 := record[6]
-	status := record[7]
-	expected := record[8]
 
 	if method == "GET" {
+		header1 := record[3]
+		header2 := record[4]
+		header3 := record[5]
+		header4 := record[6]
+		status := record[7]
+		expected := record[8]
 		getMethod(testname, url, header1, header2, header3, header4, status, expected)
 	}
 	if method == "POST" {
-		//postMethod1(url, record[2], record[3])
+		header1 := record[3]
+		header2 := record[4]
+		header3 := record[5]
+		jsondata := record[6]
+		status := record[7]
+		expected := record[8]
+		postMethod(testname, url, header1, header2, header3, jsondata, status, expected)
 	}
 }
 
