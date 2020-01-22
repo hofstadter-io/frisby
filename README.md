@@ -1,8 +1,8 @@
 # frisby
 
-[![Build Status](https://travis-ci.org/verdverm/frisby.svg?branch=master)](https://travis-ci.org/verdverm/frisby)
-[![GoDoc](https://godoc.org/github.com/verdverm/frisby?status.svg)](https://godoc.org/github.com/verdverm/frisby)
-[![GitHub release](https://img.shields.io/github/release/qubyte/rubidium.svg)](https://github.com/verdverm/frisby)
+[![Build Status](https://travis-ci.org/EducationPlannerBC/frisby.svg?branch=master)](https://travis-ci.org/EducationPlannerBC/frisby)
+[![GoDoc](https://godoc.org/github.com/EducationPlannerBC/frisby?status.svg)](https://godoc.org/github.com/EducationPlannerBC/frisby)
+[![GitHub release](https://img.shields.io/github/release/qubyte/rubidium.svg)](https://github.com/EducationPlannerBC/frisby)
 
 REST API testing framework inspired by frisby-js, written in Go
 ### Proposals
@@ -35,7 +35,7 @@ If you don't see an issue, PR, or idea; definitely add it!
 ### Installation
 
 ```shell
-go get -u github.com/verdverm/frisby
+go get -u github.com/EducationPlannerBC/frisby
 ```
 
 ### Basic Usage
@@ -166,7 +166,7 @@ import (
 	"reflect"
 
 	"github.com/bitly/go-simplejson"
-	"github.com/verdverm/frisby"
+	"github.com/EducationPlannerBC/frisby"
 )
 
 func main() {
@@ -239,4 +239,4 @@ For 7 requests made
         -  Expected Body to contain "A string which won't be found", but it was missing
 ```
 
-![catch!](https://raw.github.com/verdverm/frisby/master/frisby.gif)
+![catch!](https://raw.github.com/EducationPlannerBC/frisby/master/frisby.gif)
