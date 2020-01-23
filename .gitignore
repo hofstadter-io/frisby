@@ -24,4 +24,5 @@ _testmain.go
 *.prof
 vendor
 
+.idea
 routes.csv*
