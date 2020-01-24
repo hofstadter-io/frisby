@@ -51,8 +51,9 @@ func getMethod(testname string, url string, header1 string, header2 string, head
 	if expected != "" {
 		F.ExpectContent(expected)
 	}
-	//F.PrintBody()
-	//F.PrintGoTestReport()
+	// fmt.Println("getMethod response:")
+	// F.PrintBody()
+	// F.PrintGoTestReport()
 }
 
 func postMethod(testname string, url string, header1 string, header2 string, header3 string, jsondata string, status string, expected string) {
@@ -81,7 +82,38 @@ func postMethod(testname string, url string, header1 string, header2 string, hea
 	if expected != "" {
 		F.ExpectContent(expected)
 	}
-	//F.PrintBody()
+	// fmt.Println("postMethod response:")
+	// F.PrintBody()
+}
+
+func putMethod(testname string, url string, header1 string, header2 string, header3 string, jsondata string, status string, expected string) {
+	F := frisby.Create(testname).Put(url)
+	var key, val string
+	key, val = getKeyVal(header1)
+	if key != "" {
+		F.SetHeader(key, val)
+	}
+	key, val = getKeyVal(header2)
+	if key != "" {
+		F.SetHeader(key, val)
+	}
+	key, val = getKeyVal(header3)
+	if key != "" {
+		F.SetHeader(key, val)
+	}
+	if jsondata != "" {
+		F.SetJSON(jsondata)
+	}
+	i, err := strconv.Atoi(status)
+	if err != nil {
+		log.Fatal(err)
+	}
+	F.Send().ExpectStatus(i)
+	if expected != "" {
+		F.ExpectContent(expected)
+	}
+	fmt.Println("putMethod response:")
+	F.PrintBody()
 }
 
 func deleteMethod(testname string, url string, header1 string, header2 string, header3 string, jsondata string, status string, expected string) {
@@ -110,8 +142,8 @@ func deleteMethod(testname string, url string, header1 string, header2 string, h
 	if expected != "" {
 		F.ExpectContent(expected)
 	}
-	fmt.Println("Running delete")
-	F.PrintBody()
+	// fmt.Println("deleteMothod response:")
+	// F.PrintBody()
 }
 
 func checkRoute(record []string) {
@@ -180,6 +212,7 @@ func main() {
 		fmt.Println("\nThe format is:")
 		fmt.Println("testName|GET|url|header1|header2|header3|header4|responseStatus|expectedOutput")
 		fmt.Println("testName|POST|url|header1|header2|header3|jsondata|responseStatus|expectedOutput")
+		fmt.Println("testName|PUT|url|header1|header2|header3|jsondata|responseStatus|expectedOutput")
 		fmt.Println("testName|DELETE|url|header1|header2|header3|jsondata|responseStatus|expectedOutput")
 		fmt.Println("\nThe file route_file.csv illustrates the correct format.")
 		os.Exit(1)
