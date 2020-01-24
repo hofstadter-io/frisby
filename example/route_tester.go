@@ -167,6 +167,10 @@ func checkRoute(record []string) {
 		jsondata := record[6]
 		postMethod(testname, url, header1, header2, header3, jsondata, status, expected)
 	}
+	if method == "PUT" {
+		jsondata := record[6]
+		putMethod(testname, url, header1, header2, header3, jsondata, status, expected)
+	}
 	if method == "DELETE" {
 		jsondata := record[6]
 		deleteMethod(testname, url, header1, header2, header3, jsondata, status, expected)
