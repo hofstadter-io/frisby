@@ -51,8 +51,8 @@ func getMethod(testname string, url string, header1 string, header2 string, head
 	if expected != "" {
 		F.ExpectContent(expected)
 	}
-	// F.PrintBody()
-	// F.PrintGoTestReport()
+	//F.PrintBody()
+	//F.PrintGoTestReport()
 }
 
 func postMethod(testname string, url string, header1 string, header2 string, header3 string, jsondata string, status string, expected string) {
@@ -84,6 +84,36 @@ func postMethod(testname string, url string, header1 string, header2 string, hea
 	//F.PrintBody()
 }
 
+func deleteMethod(testname string, url string, header1 string, header2 string, header3 string, jsondata string, status string, expected string) {
+	F := frisby.Create(testname).Delete(url)
+	var key, val string
+	key, val = getKeyVal(header1)
+	if key != "" {
+		F.SetHeader(key, val)
+	}
+	key, val = getKeyVal(header2)
+	if key != "" {
+		F.SetHeader(key, val)
+	}
+	key, val = getKeyVal(header3)
+	if key != "" {
+		F.SetHeader(key, val)
+	}
+	if jsondata != "" {
+		F.SetJSON(jsondata)
+	}
+	i, err := strconv.Atoi(status)
+	if err != nil {
+		log.Fatal(err)
+	}
+	F.Send().ExpectStatus(i)
+	if expected != "" {
+		F.ExpectContent(expected)
+	}
+	fmt.Println("Running delete")
+	F.PrintBody()
+}
+
 func checkRoute(record []string) {
 	if len(record) != 9 {
 		fmt.Println("The format of the csv file is invalid!")
@@ -104,6 +134,10 @@ func checkRoute(record []string) {
 	if method == "POST" {
 		jsondata := record[6]
 		postMethod(testname, url, header1, header2, header3, jsondata, status, expected)
+	}
+	if method == "DELETE" {
+		jsondata := record[6]
+		deleteMethod(testname, url, header1, header2, header3, jsondata, status, expected)
 	}
 }
 
@@ -146,6 +180,7 @@ func main() {
 		fmt.Println("\nThe format is:")
 		fmt.Println("testName|GET|url|header1|header2|header3|header4|responseStatus|expectedOutput")
 		fmt.Println("testName|POST|url|header1|header2|header3|jsondata|responseStatus|expectedOutput")
+		fmt.Println("testName|DELETE|url|header1|header2|header3|jsondata|responseStatus|expectedOutput")
 		fmt.Println("\nThe file route_file.csv illustrates the correct format.")
 		os.Exit(1)
 	}
