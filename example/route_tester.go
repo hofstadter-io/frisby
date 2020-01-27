@@ -8,8 +8,10 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/EducationPlannerBC/frisby"
+	"github.com/bitly/go-simplejson"
 )
 
 func getKeyVal(header string) (string, string) {
@@ -146,6 +148,66 @@ func deleteMethod(testname string, url string, header1 string, header2 string, h
 	// F.PrintBody()
 }
 
+func authMethod(testname string, url string, bearerToken string, header2 string, header3 string, jsondata string, status string, expected string) {
+	var key, val string
+	var F *frisby.Frisby
+	var GUID string
+
+	var username = "test_" + strconv.FormatInt(time.Now().UnixNano(), 16) + "@example.com"
+	account := map[string]string{
+		"username":  username,
+		"password":  "Abc123",
+		"firstName": "FirstName",
+		"lastName":  "LastName",
+		// "isActive":  true,
+		// "root":      true,
+	}
+
+	// Create user account
+	F = frisby.Create(testname + " Create user account").Post(url)
+	key, val = getKeyVal(bearerToken) // bearer token
+	if key != "" {
+		F.SetHeader(key, val)
+	}
+	key, val = getKeyVal(header2) // content type for POST
+	if key != "" {
+		F.SetHeader(key, val)
+	}
+	F.SetJSON(account)
+	F.Send().ExpectStatus(200).AfterJSON(func(F *frisby.Frisby, json *simplejson.Json, err error) {
+		GUID, _ = json.Get("guid").String()
+	})
+	//F.PrintBody()
+
+	F = frisby.Create(testname + " Get user account by guid").Get(url + "/" + GUID)
+	key, val = getKeyVal(bearerToken) // bearer token
+	if key != "" {
+		F.SetHeader(key, val)
+	}
+	F.Send().ExpectStatus(200).ExpectContent("FirstName")
+	//F.PrintBody()
+
+	// Change firstName and password
+	account["firstName"] = "FirstName2"
+	account["password"] = "Def456"
+	F = frisby.Create(testname + " Change password for guid").Put(url + "/" + GUID)
+	F.SetJSON(account)
+	key, val = getKeyVal(bearerToken) // bearer token
+	if key != "" {
+		F.SetHeader(key, val)
+	}
+	F.Send().ExpectStatus(200).ExpectContent("FirstName2")
+	//F.PrintBody()
+
+	F = frisby.Create(testname + " Delete user with guid").Delete(url + "/" + GUID)
+	key, val = getKeyVal(bearerToken) // bearer token
+	if key != "" {
+		F.SetHeader(key, val)
+	}
+	F.Send().ExpectStatus(200).ExpectContent("deleted")
+	//F.PrintBody()
+}
+
 func checkRoute(record []string) {
 	if len(record) != 9 {
 		fmt.Println("The format of the csv file is invalid!")
@@ -174,6 +236,10 @@ func checkRoute(record []string) {
 	if method == "DELETE" {
 		jsondata := record[6]
 		deleteMethod(testname, url, header1, header2, header3, jsondata, status, expected)
+	}
+	if method == "AUTH" {
+		jsondata := record[6]
+		authMethod(testname, url, header1, header2, header3, jsondata, status, expected)
 	}
 }
 
