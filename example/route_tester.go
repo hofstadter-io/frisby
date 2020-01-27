@@ -148,7 +148,7 @@ func deleteMethod(testname string, url string, header1 string, header2 string, h
 	// F.PrintBody()
 }
 
-func authMethod(testname string, url string, bearerToken string, header2 string, header3 string, jsondata string, status string, expected string) {
+func authByGUIDMethod(testname string, url string, bearerToken string, header2 string, header3 string, jsondata string, status string, expected string) {
 	var key, val string
 	var F *frisby.Frisby
 	var GUID string
@@ -174,7 +174,9 @@ func authMethod(testname string, url string, bearerToken string, header2 string,
 		F.SetHeader(key, val)
 	}
 	F.SetJSON(account)
-	F.Send().ExpectStatus(200).AfterJSON(func(F *frisby.Frisby, json *simplejson.Json, err error) {
+	F.Send().ExpectStatus(200)
+	// TODO - handle exception when 'guid' is not in response!
+	F.AfterJSON(func(F *frisby.Frisby, json *simplejson.Json, err error) {
 		GUID, _ = json.Get("guid").String()
 	})
 	//F.PrintBody()
@@ -237,9 +239,9 @@ func checkRoute(record []string) {
 		jsondata := record[6]
 		deleteMethod(testname, url, header1, header2, header3, jsondata, status, expected)
 	}
-	if method == "AUTH" {
+	if method == "AUTHGUID" {
 		jsondata := record[6]
-		authMethod(testname, url, header1, header2, header3, jsondata, status, expected)
+		authByGUIDMethod(testname, url, header1, header2, header3, jsondata, status, expected)
 	}
 }
 
@@ -284,6 +286,7 @@ func main() {
 		fmt.Println("testName|POST|url|header1|header2|header3|jsondata|responseStatus|expectedOutput")
 		fmt.Println("testName|PUT|url|header1|header2|header3|jsondata|responseStatus|expectedOutput")
 		fmt.Println("testName|DELETE|url|header1|header2|header3|jsondata|responseStatus|expectedOutput")
+		fmt.Println("auth by GUID|AUTHGUID|url|bearerToken|header2|header3|jsondata|responseStatus|expectedOutput")
 		fmt.Println("\nThe file route_file.csv illustrates the correct format.")
 		os.Exit(1)
 	}
