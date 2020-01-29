@@ -26,6 +26,37 @@ func getKeyVal(header string) (string, string) {
 	return key, val
 }
 
+// Adapted from Jacob Lambert's answer at https://stackoverflow.com/questions/48465575/easy-way-to-split-string-into-map-in-go/48465690
+func getKeyValMap(jsondata string) map[string]string {
+	entries := strings.Split(jsondata, ",")
+	m := make(map[string]string)
+	for _, e := range entries {
+		parts := strings.Split(e, ":")
+		m[parts[0]] = parts[1]
+	}
+	return m
+}
+
+// From https://golangcookbook.com/chapters/strings/reverse/
+func reverse(s string) string {
+	chars := []rune(s)
+	for i, j := 0, len(chars)-1; i < j; i, j = i+1, j-1 {
+		chars[i], chars[j] = chars[j], chars[i]
+	}
+	return string(chars)
+}
+
+// For load testing
+func getKeyReverseValMap(jsondata string) map[string]string {
+	entries := strings.Split(jsondata, ",")
+	m := make(map[string]string)
+	for _, e := range entries {
+		parts := strings.Split(e, ":")
+		m[parts[0]] = reverse(parts[1])
+	}
+	return m
+}
+
 func getMethod(testname string, url string, header1 string, header2 string, header3 string, header4 string, status string, expected string) {
 	F := frisby.Create(testname).Get(url)
 	var key, val string
@@ -210,6 +241,70 @@ func authByGUIDMethod(testname string, url string, bearerToken string, header2 s
 	//F.PrintBody()
 }
 
+func loadMethod(testname string, url string, bearerToken string, header2 string, repsAndSleeps string, jsondata string, status string, expected string) {
+	var key, val string
+	var F *frisby.Frisby
+
+	config := getKeyValMap(jsondata)
+	// Do an update
+	F = frisby.Create(testname + " Update").Put(url)
+	key, val = getKeyVal(bearerToken) // bearer token
+	if key != "" {
+		F.SetHeader(key, val)
+	}
+	key, val = getKeyVal(header2) // content type
+	if key != "" {
+		F.SetHeader(key, val)
+	}
+	F.SetJSON(config)
+	F.Send().ExpectStatus(200).ExpectContent(expected)
+	//F.PrintBody()
+
+	var reps = 100
+	var sleep = 0
+	if repsAndSleeps != "" {
+		res := strings.Split(repsAndSleeps, ",")
+		if len(res) == 2 {
+			reps, _ = strconv.Atoi(res[0])
+			sleep, _ = strconv.Atoi(res[1])
+		}
+	}
+
+	for i := 1; i <= reps; i++ {
+		fmt.Print(".")
+		// Get
+		F = frisby.Create(testname + " Get").Get(url)
+		key, val = getKeyVal(bearerToken) // bearer token
+		if key != "" {
+			F.SetHeader(key, val)
+		}
+		key, val = getKeyVal(header2) // content type
+		if key != "" {
+			F.SetHeader(key, val)
+		}
+		F.Send().ExpectStatus(200)
+		//F.PrintBody()
+
+		revValConfig := getKeyReverseValMap(jsondata)
+		// Do another update
+		F = frisby.Create(testname + " Update").Put(url)
+		key, val = getKeyVal(bearerToken) // bearer token
+		if key != "" {
+			F.SetHeader(key, val)
+		}
+		key, val = getKeyVal(header2) // content type
+		if key != "" {
+			F.SetHeader(key, val)
+		}
+		F.SetJSON(revValConfig)
+		F.Send().ExpectStatus(200)
+		//F.PrintBody()
+
+		time.Sleep(time.Duration(sleep) * time.Millisecond)
+	}
+
+}
+
 func checkRoute(record []string) {
 	if len(record) != 9 {
 		fmt.Println("The format of the csv file is invalid!")
@@ -242,6 +337,10 @@ func checkRoute(record []string) {
 	if method == "AUTHGUID" {
 		jsondata := record[6]
 		authByGUIDMethod(testname, url, header1, header2, header3, jsondata, status, expected)
+	}
+	if method == "LOAD" {
+		jsondata := record[6]
+		loadMethod(testname, url, header1, header2, header3, jsondata, status, expected)
 	}
 }
 
