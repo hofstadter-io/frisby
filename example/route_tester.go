@@ -245,7 +245,9 @@ func loadMethod(testname string, url string, bearerToken string, header2 string,
 	var key, val string
 	var F *frisby.Frisby
 
-	config := getKeyValMap(jsondata)
+	valConfig := getKeyValMap(jsondata)
+	revValConfig := getKeyReverseValMap(jsondata)
+
 	// Do an update
 	F = frisby.Create(testname + " Update").Put(url)
 	key, val = getKeyVal(bearerToken) // bearer token
@@ -256,7 +258,7 @@ func loadMethod(testname string, url string, bearerToken string, header2 string,
 	if key != "" {
 		F.SetHeader(key, val)
 	}
-	F.SetJSON(config)
+	F.SetJSON(valConfig)
 	F.Send().ExpectStatus(200).ExpectContent(expected)
 	//F.PrintBody()
 
@@ -283,9 +285,7 @@ func loadMethod(testname string, url string, bearerToken string, header2 string,
 			F.SetHeader(key, val)
 		}
 		F.Send().ExpectStatus(200)
-		//F.PrintBody()
 
-		revValConfig := getKeyReverseValMap(jsondata)
 		// Do another update
 		F = frisby.Create(testname + " Update").Put(url)
 		key, val = getKeyVal(bearerToken) // bearer token
@@ -296,10 +296,39 @@ func loadMethod(testname string, url string, bearerToken string, header2 string,
 		if key != "" {
 			F.SetHeader(key, val)
 		}
-		F.SetJSON(revValConfig)
+		if i%2 == 0 {
+			F.SetJSON(valConfig)
+		} else {
+			F.SetJSON(revValConfig)
+		}
 		F.Send().ExpectStatus(200)
 		//F.PrintBody()
 
+		// Look for consistent update
+		var updatedResponse string
+		var previousResponse string
+
+		for j := 1; j <= 10; j++ {
+			F = frisby.Create(testname + " Get").Get(url)
+			key, val = getKeyVal(bearerToken) // bearer token
+			if key != "" {
+				F.SetHeader(key, val)
+			}
+			key, val = getKeyVal(header2) // content type
+			if key != "" {
+				F.SetHeader(key, val)
+			}
+			F.Send().ExpectStatus(200)
+			updatedResponse, _ = F.Resp.Text()
+			if j > 1 {
+				if updatedResponse != previousResponse {
+					fmt.Println("inconsistent results")
+				} else {
+					//fmt.Println(updatedResponse)
+				}
+			}
+			previousResponse = updatedResponse
+		}
 		time.Sleep(time.Duration(sleep) * time.Millisecond)
 	}
 
