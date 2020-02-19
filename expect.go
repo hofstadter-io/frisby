@@ -69,7 +69,7 @@ func (F *Frisby) ExpectContent(content string) *Frisby {
 // ex:  'path.to.subobject.field'
 func (F *Frisby) ExpectJSON(path string, value interface{}) *Frisby {
 	Global.NumAsserts++
-	simpJSON, err := F.Resp.Json()
+	simpJSON, err := F.Resp.JSON()
 	if err != nil {
 		F.AddError(err.Error())
 		return F
@@ -131,7 +131,7 @@ func (F *Frisby) ExpectJSON(path string, value interface{}) *Frisby {
 // ex:  'path.to.subobject.field'
 func (F *Frisby) ExpectJSONType(path string, valType reflect.Kind) *Frisby {
 	Global.NumAsserts++
-	json, err := F.Resp.Json()
+	json, err := F.Resp.JSON()
 	if err != nil {
 		F.AddError(err.Error())
 		return F
@@ -160,7 +160,7 @@ func (F *Frisby) ExpectJSONType(path string, valType reflect.Kind) *Frisby {
 // ex:  'path.to.subobject.field'
 func (F *Frisby) ExpectJSONLength(path string, length int) *Frisby {
 	Global.NumAsserts++
-	json, err := F.Resp.Json()
+	json, err := F.Resp.JSON()
 	if err != nil {
 		F.AddError(err.Error())
 		return F
@@ -227,7 +227,7 @@ type AfterJSONFunc func(F *Frisby, json *simplejson.Json, err error)
 //
 // simplejson docs: https://github.com/bitly/go-simplejson
 func (F *Frisby) AfterJSON(foo AfterJSONFunc) *Frisby {
-	json, err := F.Resp.Json()
+	json, err := F.Resp.JSON()
 	foo(F, json, err)
 	return F
 }

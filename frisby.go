@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/mozillazg/request"
+	"bitbucket.org/_metalogic_/request"
 )
 
 // Global stores information used in multiple requests
@@ -39,12 +39,13 @@ func Create(name string) *Frisby {
 
 	// copy in global settings
 	F.Req.BasicAuth = Global.Req.BasicAuth
+	F.Req.BearerAuth = Global.Req.BearerAuth
 	F.Req.Proxy = Global.Req.Proxy
 	F.SetHeaders(Global.Req.Headers)
 	F.SetCookies(Global.Req.Cookies)
 	F.SetDatas(Global.Req.Data)
 	F.SetParams(Global.Req.Params)
-	F.Req.Json = Global.Req.Json
+	F.Req.JSON = Global.Req.JSON
 	F.Req.Files = append(F.Req.Files, Global.Req.Files...)
 
 	// initialize request
@@ -196,7 +197,7 @@ func (F *Frisby) SetParams(params map[string]string) *Frisby {
 
 // SetJSON sets the JSON body for the coming request
 func (F *Frisby) SetJSON(json interface{}) *Frisby {
-	F.Req.Json = json
+	F.Req.JSON = json
 	return F
 }
 

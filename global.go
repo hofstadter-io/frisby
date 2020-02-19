@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/mozillazg/request"
+	"bitbucket.org/_metalogic_/request"
 )
 
 type globalData struct {
@@ -127,7 +127,7 @@ func (G *globalData) SetParams(params map[string]string) *globalData {
 
 // Set the JSON body for the coming request
 func (G *globalData) SetJSON(json interface{}) *globalData {
-	G.Req.Json = json
+	G.Req.JSON = json
 	return G
 }
 

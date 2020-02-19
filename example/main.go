@@ -8,7 +8,7 @@ import (
 	"github.com/bitly/go-simplejson"
 )
 
-func oldmain() {
+func main() {
 	fmt.Println("Frisby!")
 
 	frisby.Create("Test GET Go homepage").

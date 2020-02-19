@@ -1,9 +1,5 @@
 # frisby
 
-<!-- [![Build Status](https://travis-ci.org/EducationPlannerBC/frisby.svg?branch=master)](https://travis-ci.org/EducationPlannerBC/frisby)
-[![GoDoc](https://godoc.org/github.com/EducationPlannerBC/frisby?status.svg)](https://godoc.org/github.com/EducationPlannerBC/frisby)
-[![GitHub release](https://img.shields.io/github/release/qubyte/rubidium.svg)](https://github.com/EducationPlannerBC/frisby)
--->
 REST API testing framework inspired by frisby-js, written in Go
 
 Forked from https://github.com/verdverm/frisby
