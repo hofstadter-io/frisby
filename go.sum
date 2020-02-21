@@ -8,7 +8,6 @@ github.com/kr/pretty v0.0.0-20160325215624-add1dbc86daf h1:FpLJsEsdtsfWNJ+m+MECl
 github.com/kr/pretty v0.0.0-20160325215624-add1dbc86daf/go.mod h1:Bvhd+E3laJ0AVkG0c9rmtZcnhV0HQ3+c3YxxqTvc/gA=
 github.com/kr/text v0.0.0-20160504234017-7cafcd837844 h1:kpzneEBeC0dMewP3gr/fADv1OlblH9r1goWVwpOt3TU=
 github.com/kr/text v0.0.0-20160504234017-7cafcd837844/go.mod h1:sjUstKUATFIcff4qlB53Kml0wQPtJVc/3fWrmuUmcfA=
-github.com/mozillazg/request v0.8.0 h1:TbXeQUdBWr1J1df5Z+lQczDFzX9JD71kTCl7Zu/9rNM=
 github.com/mozillazg/request v0.8.0/go.mod h1:weoQ/mVFNbWgRBtivCGF1tUT9lwneFesues+CleXMWc=
 golang.org/x/crypto v0.0.0-20190308221718-c2843e01d9a2/go.mod h1:djNgcEr1/C05ACkg1iLfiJU5Ep61QUkGW8qpdssI0+w=
 golang.org/x/net v0.0.0-20160531150152-c4c3ea71919d/go.mod h1:mL1N/T3taQHkDXs73rZJwtUhF3w3ftmwwsq0BUmARs4=
