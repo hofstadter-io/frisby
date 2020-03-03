@@ -56,7 +56,7 @@ func (F *Frisby) ExpectContent(content string) *Frisby {
 	}
 	contains := strings.Contains(text, content)
 	if !contains {
-		errStr := fmt.Sprintf("Expected Body to contain '%q' in '%s', but it was missing", content, text)
+		errStr := fmt.Sprintf("Expected Body to contain '%q' in '%s'", content, text)
 		F.AddError(errStr)
 	}
 	return F
