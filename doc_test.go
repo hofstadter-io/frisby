@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"reflect"
 
+	"github.com/EducationPlannerBC/frisby"
 	"github.com/bitly/go-simplejson"
-	"github.com/verdverm/frisby"
 )
 
 func init() {
@@ -49,35 +49,35 @@ func ExampleFrisby_PrintReport() {
 	//         -  Manually Added Error
 }
 
-func ExampleFrisby_ExpectJsonType() {
-	frisby.Create("Test ExpectJsonType").
+func ExampleFrisby_ExpectJSONType() {
+	frisby.Create("Test ExpectJSONType").
 		Post("http://httpbin.org/post").
 		Send().
 		ExpectStatus(200).
-		ExpectJsonType("url", reflect.String).
+		ExpectJSONType("url", reflect.String).
 		PrintReport()
 
-	// Output: Pass  [Test ExpectJsonType]
+	// Output: Pass  [Test ExpectJSONType]
 }
 
-func ExampleFrisby_ExpectJson() {
-	frisby.Create("Test ExpectJson").
+func ExampleFrisby_ExpectJSON() {
+	frisby.Create("Test ExpectJSON").
 		Post("http://httpbin.org/post").
 		Send().
 		ExpectStatus(200).
-		ExpectJson("url", "http://httpbin.org/post").
-		ExpectJson("headers.Accept", "*/*").
+		ExpectJSON("url", "http://httpbin.org/post").
+		ExpectJSON("headers.Accept", "*/*").
 		PrintReport()
 
-	// Output: Pass  [Test ExpectJson]
+	// Output: Pass  [Test ExpectJSON]
 }
 
-func ExampleFrisby_AfterJson() {
-	frisby.Create("Test AfterJson").
+func ExampleFrisby_AfterJSON() {
+	frisby.Create("Test AfterJSON").
 		Post("http://httpbin.org/post").
 		Send().
 		ExpectStatus(200).
-		AfterJson(func(F *frisby.Frisby, json *simplejson.Json, err error) {
+		AfterJSON(func(F *frisby.Frisby, json *simplejson.Json, err error) {
 			val, _ := json.Get("url").String()
 			fmt.Println("url =", val)
 		})

@@ -23,3 +23,7 @@ _testmain.go
 *.test
 *.prof
 vendor
+
+.idea
+routes.csv*
+routes_local.csv*

@@ -12,41 +12,41 @@ import (
 // ExpectFunc function type used as argument to Expect()
 type ExpectFunc func(F *Frisby) (bool, string)
 
-// Expect Checks according to the given function, which allows you to describe any kind of assertion.
+// Expect checks according to the given function, which allows you to describe any kind of assertion.
 func (F *Frisby) Expect(foo ExpectFunc) *Frisby {
 	Global.NumAsserts++
-	if ok, err_str := foo(F); !ok {
-		F.AddError(err_str)
+	if ok, errStr := foo(F); !ok {
+		F.AddError(errStr)
 	}
 	return F
 }
 
-// Checks the response status code
+// ExpectStatus checks the response status code
 func (F *Frisby) ExpectStatus(code int) *Frisby {
 	Global.NumAsserts++
 	status := F.Resp.StatusCode
 	if status != code {
-		err_str := fmt.Sprintf("Expected Status %d, but got %d: %q", code, status, F.Resp.Status)
-		F.AddError(err_str)
+		errStr := fmt.Sprintf("Expected Status %d, but got %d: %q", code, status, F.Resp.Status)
+		F.AddError(errStr)
 	}
 	return F
 }
 
-// Checks for header and if values match
+// ExpectHeader checks for header and if values match
 func (F *Frisby) ExpectHeader(key, value string) *Frisby {
 	Global.NumAsserts++
-	chk_val := F.Resp.Header.Get(key)
-	if chk_val == "" {
-		err_str := fmt.Sprintf("Expected Header %q, but it was missing", key)
-		F.AddError(err_str)
-	} else if chk_val != value {
-		err_str := fmt.Sprintf("Expected Header %q to be %q, but got %q", key, value, chk_val)
-		F.AddError(err_str)
+	chkVal := F.Resp.Header.Get(key)
+	if chkVal == "" {
+		errStr := fmt.Sprintf("Expected Header %q, but it was missing", key)
+		F.AddError(errStr)
+	} else if chkVal != value {
+		errStr := fmt.Sprintf("Expected Header %q to be %q, but got %q", key, value, chkVal)
+		F.AddError(errStr)
 	}
 	return F
 }
 
-// Checks the response body for the given string
+// ExpectContent checks the response body for the given string
 func (F *Frisby) ExpectContent(content string) *Frisby {
 	Global.NumAsserts++
 	text, err := F.Resp.Text()
@@ -56,20 +56,20 @@ func (F *Frisby) ExpectContent(content string) *Frisby {
 	}
 	contains := strings.Contains(text, content)
 	if !contains {
-		err_str := fmt.Sprintf("Expected Body to contain %q, but it was missing", content)
-		F.AddError(err_str)
+		errStr := fmt.Sprintf("Expected Body to contain '%q' in '%s'", content, text)
+		F.AddError(errStr)
 	}
 	return F
 }
 
-// ExpectJson uses the reflect.DeepEqual to compare the response
+// ExpectJSON uses the reflect.DeepEqual to compare the response
 // JSON and the supplied JSON for structural and value equality
 //
 // path can be a dot joined field names.
 // ex:  'path.to.subobject.field'
-func (F *Frisby) ExpectJson(path string, value interface{}) *Frisby {
+func (F *Frisby) ExpectJSON(path string, value interface{}) *Frisby {
 	Global.NumAsserts++
-	simp_json, err := F.Resp.Json()
+	simpJSON, err := F.Resp.JSON()
 	if err != nil {
 		F.AddError(err.Error())
 		return F
@@ -77,100 +77,98 @@ func (F *Frisby) ExpectJson(path string, value interface{}) *Frisby {
 
 	if path != "" {
 		// Loop over each path item and progress down the json path.
-		path_items := strings.Split(path, Global.PathSeparator)
-		for _, segment := range path_items {
+		pathItems := strings.Split(path, Global.PathSeparator)
+		for _, segment := range pathItems {
 			processed := false
 			// If the path segment is an integer, and we're at an array, access the index.
 			index, err := strconv.Atoi(segment)
 			if err == nil {
-				if _, err := simp_json.Array(); err == nil {
-					simp_json = simp_json.GetIndex(index)
+				if _, err := simpJSON.Array(); err == nil {
+					simpJSON = simpJSON.GetIndex(index)
 					processed = true
 				}
 			}
 
 			if !processed {
-				simp_json = simp_json.Get(segment)
+				simpJSON = simpJSON.Get(segment)
 			}
 		}
 	}
-	json := simp_json.Interface()
+	json := simpJSON.Interface()
 
 	equal := false
 	switch reflect.ValueOf(value).Kind() {
 	case reflect.Int:
-		val, err := simp_json.Int()
+		val, err := simpJSON.Int()
 		if err != nil {
 			F.AddError(err.Error())
 			return F
-		} else {
-			equal = (val == value.(int))
 		}
+		equal = (val == value.(int))
 	case reflect.Float64:
-		val, err := simp_json.Float64()
+		val, err := simpJSON.Float64()
 		if err != nil {
 			F.AddError(err.Error())
 			return F
-		} else {
-			equal = (val == value.(float64))
 		}
+		equal = (val == value.(float64))
 	default:
 		equal = reflect.DeepEqual(value, json)
 	}
 
 	if !equal {
-		err_str := fmt.Sprintf("ExpectJson equality test failed for %q, got value: %v", path, json)
-		F.AddError(err_str)
+		errStr := fmt.Sprintf("ExpectJSON equality test failed for %q, got value: %v", path, json)
+		F.AddError(errStr)
 	}
 
 	return F
 }
 
-// ExpectJsonType checks if the types of the response
+// ExpectJSONType checks if the types of the response
 // JSON and the supplied JSON match
 //
 // path can be a dot joined field names.
 // ex:  'path.to.subobject.field'
-func (F *Frisby) ExpectJsonType(path string, val_type reflect.Kind) *Frisby {
+func (F *Frisby) ExpectJSONType(path string, valType reflect.Kind) *Frisby {
 	Global.NumAsserts++
-	json, err := F.Resp.Json()
+	json, err := F.Resp.JSON()
 	if err != nil {
 		F.AddError(err.Error())
 		return F
 	}
 
 	if path != "" {
-		path_items := strings.Split(path, Global.PathSeparator)
-		json = json.GetPath(path_items...)
+		pathItems := strings.Split(path, Global.PathSeparator)
+		json = json.GetPath(pathItems...)
 	}
 
-	json_json := json.Interface()
+	jsonJSON := json.Interface()
 
-	json_val := reflect.ValueOf(json_json)
-	if val_type != json_val.Kind() {
-		err_str := fmt.Sprintf("Expect Json %q type to be %q, but got %T", path, val_type, json_json)
-		F.AddError(err_str)
+	jsonVal := reflect.ValueOf(jsonJSON)
+	if valType != jsonVal.Kind() {
+		errStr := fmt.Sprintf("Expect Json %q type to be %q, but got %T", path, valType, jsonJSON)
+		F.AddError(errStr)
 	}
 
 	return F
 }
 
-// ExpectJsonLength checks if the JSON at path
+// ExpectJSONLength checks if the JSON at path
 // is an array and has the correct length
 //
 // path can be a dot joined field names.
 // ex:  'path.to.subobject.field'
-func (F *Frisby) ExpectJsonLength(path string, length int) *Frisby {
+func (F *Frisby) ExpectJSONLength(path string, length int) *Frisby {
 	Global.NumAsserts++
-	json, err := F.Resp.Json()
+	json, err := F.Resp.JSON()
 	if err != nil {
 		F.AddError(err.Error())
 		return F
 	}
 
 	if path != "" {
-		path_items := strings.Split(path, Global.PathSeparator)
-		json = json.GetPath(path_items...)
+		pathItems := strings.Split(path, Global.PathSeparator)
+		json = json.GetPath(pathItems...)
 	}
 
 	ary, err := json.Array()
@@ -181,14 +179,14 @@ func (F *Frisby) ExpectJsonLength(path string, length int) *Frisby {
 	L := len(ary)
 
 	if L != length {
-		err_str := fmt.Sprintf("Expect length to be %d, but got %d", length, L)
-		F.AddError(err_str)
+		errStr := fmt.Sprintf("Expect length to be %d, but got %d", length, L)
+		F.AddError(errStr)
 	}
 
 	return F
 }
 
-// function type used as argument to AfterContent()
+// AfterContentFunc function type used as argument to AfterContent()
 type AfterContentFunc func(F *Frisby, content []byte, err error)
 
 // AfterContent allows you to write your own functions for inspecting the body of the response.
@@ -203,7 +201,7 @@ func (F *Frisby) AfterContent(foo AfterContentFunc) *Frisby {
 	return F
 }
 
-// function type used as argument to AfterText()
+// AfterTextFunc function type used as argument to AfterText()
 type AfterTextFunc func(F *Frisby, text string, err error)
 
 // AfterText allows you to write your own functions for inspecting the body of the response.
@@ -218,23 +216,23 @@ func (F *Frisby) AfterText(foo AfterTextFunc) *Frisby {
 	return F
 }
 
-// function type used as argument to AfterJson()
-type AfterJsonFunc func(F *Frisby, json *simplejson.Json, err error)
+// AfterJSONFunc function type used as argument to AfterJSON()
+type AfterJSONFunc func(F *Frisby, json *simplejson.Json, err error)
 
-// AfterJson allows you to write your own functions for inspecting the body of the response.
+// AfterJSON allows you to write your own functions for inspecting the body of the response.
 // You are also provided with the Frisby object.
 //
-// The function signiture is AfterJsonFunc
-//  type AfterJsonFunc func(F *Frisby, json *simplejson.Json, err error)
+// The function signiture is AfterJSONFunc
+//  type AfterJSONFunc func(F *Frisby, json *simplejson.Json, err error)
 //
 // simplejson docs: https://github.com/bitly/go-simplejson
-func (F *Frisby) AfterJson(foo AfterJsonFunc) *Frisby {
-	json, err := F.Resp.Json()
+func (F *Frisby) AfterJSON(foo AfterJSONFunc) *Frisby {
+	json, err := F.Resp.JSON()
 	foo(F, json, err)
 	return F
 }
 
-// Prints the body of the response
+// PrintBody prints the body of the response
 func (F *Frisby) PrintBody() *Frisby {
 	str, err := F.Resp.Text()
 	if err != nil {
@@ -245,7 +243,7 @@ func (F *Frisby) PrintBody() *Frisby {
 	return F
 }
 
-// Prints a report for the Frisby Object
+// PrintReport prints a report for the Frisby Object
 //
 // If there are any errors, they will all be printed as well
 func (F *Frisby) PrintReport() *Frisby {
@@ -261,7 +259,7 @@ func (F *Frisby) PrintReport() *Frisby {
 	return F
 }
 
-// Prints a report for the Frisby Object in go_test format
+// PrintGoTestReport prints a report for the Frisby Object in go_test format
 //
 // If there are any errors, they will all be printed as well
 func (F *Frisby) PrintGoTestReport() *Frisby {
